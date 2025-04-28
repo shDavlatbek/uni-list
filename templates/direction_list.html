@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}Yo'nalishlar{% endblock %}
+
+{% block filters %}
+    <div class="filter-section">
+        <label for="query">Qidiruv:</label>
+        <input type="text" name="query" id="query" placeholder="Yo'nalish yoki universitet..." value="{{ applied_filters.query|default:'' }}">
+    </div>
+
+    <div class="filter-section">
+        <label for="university_id">Universitet:</label>
+        <select name="university_id" id="university_id">
+            <option value="">Barchasi</option>
+            {% for uni in filter_options.universities %}
+                <option value="{{ uni.id }}" {% if applied_filters.university_id == uni.id|stringformat:"s" %}selected{% endif %}>{{ uni.full_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="filter-section">
+        <label for="category">Yo'nalish Kategoriyasi:</label>
+        <select name="category" id="category">
+            <option value="">Barchasi</option>
+            {% for cat in filter_options.categories %}
+                <option value="{{ cat.id }}" {% if applied_filters.category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="filter-section">
+        <label for="location">Manzil (Universitet bo'yicha):</label>
+        <select name="location" id="location">
+            <option value="">Barchasi</option>
+            {% for loc in filter_options.locations %}
+                <option value="{{ loc.id }}" {% if applied_filters.location == loc.id|stringformat:"s" %}selected{% endif %}>{{ loc.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="filter-section">
+        <label for="institution_category_id">OTM Turi (Universitet bo'yicha):</label>
+        <select name="institution_category_id" id="institution_category_id">
+            <option value="">Barchasi</option>
+            {% for cat in filter_options.institution_categories %}
+                <option value="{{ cat.id }}" {% if applied_filters.institution_category_id == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="filter-section">
+        <label>Ta'lim Turi:</label>
+        <div class="filter-checkbox-group">
+            {% for type in filter_options.education_types %}
+            <div>
+                <input type="checkbox" name="edu_type" value="{{ type.id }}" id="edu_type_{{ type.id }}" {% if type.id|stringformat:"s" in applied_filters.getlist.edu_type %}checked{% endif %}>
+                <label for="edu_type_{{ type.id }}">{{ type.name }}</label>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+     <div class="filter-section">
+        <label>Ta'lim Tili:</label>
+        <div class="filter-checkbox-group">
+            {% for lang in filter_options.education_languages %}
+            <div>
+                <input type="checkbox" name="edu_lang" value="{{ lang.id }}" id="edu_lang_{{ lang.id }}" {% if lang.id|stringformat:"s" in applied_filters.getlist.edu_lang %}checked{% endif %}>
+                <label for="edu_lang_{{ lang.id }}">{{ lang.name }}</label>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <label>Darajalar:</label>
+        <div class="filter-checkbox-group">
+            {% for degree in filter_options.degrees %}
+            <div>
+                <input type="checkbox" name="degree" value="{{ degree.id }}" id="degree_{{ degree.id }}" {% if degree.id|stringformat:"s" in applied_filters.getlist.degree %}checked{% endif %}>
+                <label for="degree_{{ degree.id }}">{{ degree.name }}</label>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+     <div class="filter-section">
+        <label>Qo'shimcha:</label>
+         <div class="filter-checkbox-group">
+             <div>
+                <input type="checkbox" name="has_stipend" value="true" id="has_stipend" {% if applied_filters.has_stipend == 'true' %}checked{% endif %}>
+                <label for="has_stipend">Stipendiya mavjud</label>
+             </div>
+             </div>
+    </div>
+
+    <div class="filter-section">
+        <label for="min_price">Minimal Narx (Universitet bo'yicha):</label>
+        <input type="number" name="min_price" id="min_price" placeholder="{{ filter_options.min_price }}" value="{{ applied_filters.min_price|default:'' }}" min="0">
+    </div>
+     <div class="filter-section">
+        <label for="max_price">Maksimal Narx (Universitet bo'yicha):</label>
+        <input type="number" name="max_price" id="max_price" placeholder="{{ filter_options.max_price }}" value="{{ applied_filters.max_price|default:'' }}" min="0">
+    </div>
+
+{% endblock %}
+
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow mb-6">
+    <h1 class="text-2xl font-semibold text-gray-800">Ta'lim Yo'nalishlari Ro'yxati</h1>
+     <p class="text-gray-600">Jami: {{ page_obj.paginator.count }} ta yo'nalish topildi.</p>
+</div>
+
+<div class="space-y-4">
+    {% for direction in page_obj %}
+    <div class="bg-white rounded-lg shadow p-4 flex flex-col sm:flex-row gap-4 items-start hover:shadow-md transition duration-200">
+         <div class="flex-shrink-0 w-16 h-16 bg-gray-200 rounded-md flex items-center justify-center">
+            {% if direction.university.logo %}
+             <img src="/media/{{ direction.university.logo }}" alt="{{ direction.university.full_name }} logosi" class="max-h-full max-w-full object-contain p-1" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-xs text-gray-500\'>Logo</span>';">
+             {% else %}
+             <span class="text-xs text-gray-500">Logo</span>
+             {% endif %}
+         </div>
+         <div class="flex-grow">
+             <h3 class="text-lg font-semibold text-blue-700 mb-1">
+                 {{ direction.direction_name }}
+                 </h3>
+             <p class="text-sm font-medium text-gray-800">{{ direction.university.full_name }}</p>
+             {% if direction.category %}
+             <p class="text-sm text-gray-600 mb-1">Kategoriya: {{ direction.category.name }}</p>
+             {% endif %}
+             {% if direction.university.location %}
+             <p class="text-sm text-gray-500 mb-2">Manzil: {{ direction.university.location.name }}</p>
+             {% endif %}
+
+             <div class="text-xs text-gray-500 mb-3 space-x-2">
+                 {% if direction.has_stipend %}
+                 <span class="text-green-600 font-medium">Stipendiya mavjud</span>
+                 {% endif %}
+                 </div>
+
+             <div class="flex flex-wrap gap-1 mb-2">
+                 {% for type in direction.education_types.all %}
+                     <span class="inline-block bg-gray-200 rounded-full px-2 py-0.5 text-xs font-medium text-gray-700">{{ type.name }}</span>
+                 {% endfor %}
+             </div>
+              <div class="flex flex-wrap gap-1">
+                 {% for lang in direction.education_languages.all %}
+                     <span class="inline-block bg-blue-100 rounded-full px-2 py-0.5 text-xs font-medium text-blue-800">{{ lang.name }}</span>
+                 {% endfor %}
+             </div>
+             </div>
+    </div>
+    {% empty %}
+    <p class="text-center text-gray-500">Filtrlarga mos yo'nalishlar topilmadi.</p>
+    {% endfor %}
+</div>
+{% endblock %}
+

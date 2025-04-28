@@ -1,0 +1,107 @@
+[
+    {
+      "name": "tuition_price",
+      "label": "Ta'lim narxi",
+      "value": {
+        "min": 860000,
+        "max": 100000000
+      }
+    },
+    {
+      "name": "has_grant",
+      "label": "Grant mavjud",
+      "value": false
+    },
+    {
+      "name": "has_stipend",
+      "label": "Stipendiya mavjud",
+      "value": false
+    },
+    {
+      "name": "institution_category_id",
+      "label": "OTM turi",
+      "value": [
+        { "name": "Xususiy OTMlar",  "id": "4" },
+        { "name": "Davlat OTMlari",  "id": "3" },
+        { "name": "Xalqaro OTMlari", "id": "5" }
+      ]
+    },
+    {
+      "name": "location",
+      "label": "Manzil",
+      "value": [
+        { "name": "Qoraqalpog‘iston Respublikasi", "id": "1" },
+        { "name": "Andijon viloyati",             "id": "2" },
+        { "name": "Buxoro viloyati",              "id": "3" },
+        { "name": "Jizzax viloyati",              "id": "4" },
+        { "name": "Qashqadaryo viloyati",         "id": "5" },
+        { "name": "Navoiy viloyati",              "id": "6" },
+        { "name": "Namangan viloyati",            "id": "7" },
+        { "name": "Samarqand viloyati",           "id": "8" },
+        { "name": "Surxondaryo viloyati",         "id": "9" },
+        { "name": "Sirdaryo viloyati",            "id": "10" },
+        { "name": "Toshkent viloyati",            "id": "11" },
+        { "name": "Farg'ona viloyati",            "id": "12" },
+        { "name": "Xorazm viloyati",              "id": "13" },
+        { "name": "Toshkent shahri",              "id": "14" },
+        { "name": "Boshqa",                       "id": "15" }
+      ]
+    },
+    {
+      "name": "category",
+      "label": "Ta'lim yo'nalishlari",
+      "value": [
+        { "name": "Arxitektura va qurilish",                                   "id": "11" },
+        { "name": "Atrof-muhitni o'rganish va Yer fanlari",                     "id": "47" },
+        { "name": "Biznes, menejment va moliya",                                "id": "2" },
+        { "name": "Dam olish va sport",                                         "id": "54" },
+        { "name": "Filologiya va kulturologiya",                               "id": "55" },
+        { "name": "Harbiy fan va xavfsizlik",                                  "id": "56" },
+        { "name": "Huquq va huquqshunoslik",                                   "id": "58" },
+        { "name": "Ijtimoiy va Gumanitar fanlar",                              "id": "57" },
+        { "name": "Iqtisodiyot, buxgalteriya hisobi va soliqqa tortish",       "id": "36" },
+        { "name": "Jurnalistika va ommaviy axborot",                           "id": "44" },
+        { "name": "Kompyuter fanlari va IT",                                    "id": "37" },
+        { "name": "Konchilik va neft-gaz faoliyati",                           "id": "32" },
+        { "name": "Logistika va transport",                                    "id": "26" },
+        { "name": "Marketing and PR",                                          "id": "3" },
+        { "name": "Muhandislik va texnologiya",                               "id": "33" },
+        { "name": "Oziq-ovqat va ovqatlanish va ichimliklar tadqiqotlari",    "id": "1" },
+        { "name": "Psixologiya",                                               "id": "30" },
+        { "name": "Qishloq va oʻrmon xoʻjaligi",                               "id": "9" },
+        { "name": "San'at, dizayn va moda",                                    "id": "12" },
+        { "name": "Sotsiologiya, siyosatshunoslik va tarix",                  "id": "59" },
+        { "name": "Tabiiy va aniq fanlar",                                    "id": "6" },
+        { "name": "Ta'lim va o'qitish",                                        "id": "10" },
+        { "name": "Tibbiyot va salomatlik",                                   "id": "4" },
+        { "name": "Turizm, mehmondo'stlik va restoran boshqaruvi",            "id": "13" }
+      ]
+    },
+    {
+      "name": "edu_type",
+      "label": "Ta'lim turi",
+      "value": [
+        { "name": "Kunduzgi",      "id": "1" },
+        { "name": "Sirtqi",         "id": "2" },
+        { "name": "Kechki",         "id": "3" },
+        { "name": "Masofaviy",      "id": "4" },
+        { "name": "Qo'shma ta'lim", "id": "5" }
+      ]
+    },
+    {
+      "name": "edu_lang",
+      "label": "Til",
+      "value": [
+        { "name": "O'zbek tili",     "id": "1" },
+        { "name": "Ingliz tili",     "id": "2" },
+        { "name": "Rus tili",        "id": "3" },
+        { "name": "Turkman tili",    "id": "4" },
+        { "name": "Qozoq tili",      "id": "5" },
+        { "name": "Qoraqalpoq tili", "id": "6" },
+        { "name": "Qirg'iz tili",    "id": "7" },
+        { "name": "Tojik tili",      "id": "8" },
+        { "name": "Nemis tili",      "id": "11" }
+      ]
+    }
+  ]
+  

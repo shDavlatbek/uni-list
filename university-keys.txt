@@ -1,0 +1,274 @@
+JSON Structure Analysis:
+==================================================
+56 unique keys
+
+Key: 'about_grant_en'
+  Possible value types: NoneType, str
+
+Key: 'about_grant_ru'
+  Possible value types: NoneType, str
+
+Key: 'about_grant_uz'
+  Possible value types: NoneType, str
+
+Key: 'accreditation_certificate'
+  Possible value types: NoneType, str
+
+Key: 'address_en'
+  Possible value types: str
+
+Key: 'address_ru'
+  Possible value types: str
+
+Key: 'address_uz'
+  Possible value types: str
+
+Key: 'admission_deadline'
+  Possible value types: str
+
+Key: 'admission_phone'
+  Possible value types: NoneType, str
+
+Key: 'admission_start_date'
+  Possible value types: str
+
+Key: 'certification_link'
+  Possible value types: NoneType, str
+
+Key: 'current_quota'
+  Possible value types: int
+
+Key: 'degree'
+  Possible value types: array of object
+
+Key: 'description_en'
+  Possible value types: str
+
+Key: 'description_ru'
+  Possible value types: str
+
+Key: 'description_uz'
+  Possible value types: str
+
+Key: 'directionCount'
+  Possible value types: int
+
+Key: 'education_language'
+  Possible value types: array of object
+
+Key: 'education_type'
+  Possible value types: array of object
+
+Key: 'facebook_username'
+  Possible value types: NoneType, str
+
+Key: 'founded_year'
+  Possible value types: NoneType, str
+
+Key: 'full_name_en'
+  Possible value types: str
+
+Key: 'full_name_ru'
+  Possible value types: str
+
+Key: 'full_name_uz'
+  Possible value types: str
+
+Key: 'gallery'
+  Possible value types: array of str
+
+Key: 'has_accomodation'
+  Possible value types: bool
+
+Key: 'has_grant'
+  Possible value types: NoneType, bool
+
+Key: 'id'
+  Possible value types: int
+
+Key: 'instagram_username'
+  Possible value types: NoneType, str
+
+Key: 'institution_category_id'
+  Possible value types: int
+
+Key: 'institution_type'
+  Possible value types: str
+
+Key: 'is_open_for_admission'
+  Possible value types: bool
+
+Key: 'is_promoted'
+  Possible value types: int
+
+Key: 'latitude'
+  Possible value types: NoneType, str
+
+Key: 'lead_limit'
+  Possible value types: int
+
+Key: 'linkedin_username'
+  Possible value types: NoneType
+
+Key: 'location_en'
+  Possible value types: str
+
+Key: 'location_ru'
+  Possible value types: str
+
+Key: 'location_uz'
+  Possible value types: str
+
+Key: 'logo'
+  Possible value types: str
+
+Key: 'longitude'
+  Possible value types: NoneType, str
+
+Key: 'maximal_tuition_fee'
+  Possible value types: int
+
+Key: 'minimal_tuition_fee'
+  Possible value types: int
+
+Key: 'mtdt_description_en'
+  Possible value types: NoneType, str
+
+Key: 'mtdt_description_ru'
+  Possible value types: NoneType, str
+
+Key: 'mtdt_description_uz'
+  Possible value types: NoneType, str
+
+Key: 'mtdt_title_ru'
+  Possible value types: NoneType, str
+
+Key: 'mtdt_title_uz'
+  Possible value types: NoneType, str
+
+Key: 'rating'
+  Possible value types: NoneType, str
+
+Key: 'rating_total_pupil'
+  Possible value types: NoneType, int
+
+Key: 'slug'
+  Possible value types: str
+
+Key: 'students_count'
+  Possible value types: int
+
+Key: 'support_email'
+  Possible value types: NoneType, str
+
+Key: 'telegram_username'
+  Possible value types: NoneType, str
+
+Key: 'web_site'
+  Possible value types: NoneType, str
+
+Key: 'youtube_username'
+  Possible value types: NoneType, str
+
+
+Sample JSON object with all possible keys:
+==================================================
+{
+  "id": 1,
+  "rating_total_pupil": 1,
+  "rating": "3.2",
+  "education_type": [
+    {
+      "id": 1
+    },
+    {
+      "id": 2
+    },
+    {
+      "id": 3
+    },
+    {
+      "id": 4
+    }
+  ],
+  "degree": [
+    {
+      "id": 1
+    },
+    {
+      "id": 2
+    }
+  ],
+  "education_language": [
+    {
+      "id": 1
+    },
+    {
+      "id": 2
+    },
+    {
+      "id": 3
+    },
+    {
+      "id": 4
+    },
+    {
+      "id": 5
+    }
+  ],
+  "full_name_uz": "Toshkent ijtimoiy innovatsiya universiteti",
+  "full_name_ru": "Ташкентский университет социальных инноваций",
+  "full_name_en": "Tashkent University of Social Innovation",
+  "logo": "logo/4f6db69f-2163-4531-b020-fb56f199e99a.jpg",
+  "has_grant": false,
+  "about_grant_uz": "",
+  "about_grant_ru": "",
+  "about_grant_en": "",
+  "location_uz": "Toshkent shahri",
+  "location_ru": "Город Ташкент",
+  "location_en": "Tashkent city",
+  "description_uz": "<p classNamenamenamenamenamename=\"ql-align-justify\"><strong>Universitet haqida :</strong></p><p classNamenamenamenamenamename=\"ql-align-justify\">O‘zbekiston Respublikasi Oliy ta’lim, fan va innovatsiyalar vazirligi tomonidan 2022-yil 22 - noyabr kuni 168654-raqamli litsenziya Toshkent ijtimoiy innovatsiya universitetiga oliy ta’lim xizmatlarini ko‘rsatish uchun berildi.</p><p classNamenamenamenamenamename=\"ql-align-justify\"><strong>Toshkent ijtimoiy innovatsiya universiteti </strong>ilg‘or ta’lim texnologiyalariga asoslangan holda ijtimoiy soha va iqtisodiyot tarmoqlari uchun zamonaviy bilim va ko‘nikmalarga ega, mas’uliyatni o‘z zimmasiga olishga qodir, mustaqil fikrlaydigan malakali kadrlarni yetishtirib beruvchi nodavlat oliy ta’lim tashkiloti hisoblanadi.</p><p classNamenamenamenamenamename=\"ql-align-justify\"><br></p><p classNamenamenamenamenamename=\"ql-align-justify\"><strong>Ta'lim shakli : </strong>O’zingiz uchun qulay ta’lim shaklini tanlang va o’qishingiz hamda ishingizni birgalikda olib boring yoki o’zingizni to’liq o’quv jarayonlariga jalb qiling.</p><p classNamenamenamenamenamename=\"ql-align-justify\"><strong>Kunduzgi ta'lim: </strong>Kunduzgi ta’lim shaklida siz haftada 4-5 kun o’qiysiz: ma’ruza va seminarlarda qatnashasiz, test va imtihonlar topshirasiz. O’quv yili 2 semestrga bo’linadi. O’quv yili sentabrdan boshlanib iyungacha davom etadi.</p><p classNamenamenamenamenamename=\"ql-align-justify\"><strong>Sirtqi ta'lim: </strong>Sirtqi ta’lim shakli asosan masofaviy o’qitish texnologiyalari yordamida amalga oshiriladi. Shuningdek semestrda 2-4 haftagacha universitetga kelishingiz talab etilishi mumkin.</p><p classNamenamenamenamenamename=\"ql-align-justify\"><strong>Kechki talim: </strong>Kechki talim shaklida siz haftada 4-5 kun o’qiysiz: ma’ruza va seminarlarda qatnashasiz, test va imtihonlar topshirasiz. Darslar soat 17:00 dan keyin bo’ladi.</p><p classNamenamenamenamenamename=\"ql-align-justify\"><br></p><p classNamenamenamenamenamename=\"ql-align-justify\"><strong style=\"color: rgb(22, 22, 22);\">Qabul shartlari:</strong></p><ol><li classNamenamenamenamenamename=\"ql-align-justify\">So'rov qoldiring-Mobil telefon raqamingizdan foydalangan holda qabul uchun saytda ariza qoldiring (Bizdan sms xabar qabul qilish va tizimda muvaffaqiyatli ro’yxatdan o’tishingiz uchun hisobingizda yetarlicha mablag’ bo’lishi kerak).</li><li classNamenamenamenamenamename=\"ql-align-justify\">Hujjatlarni taqdim qiling-<span style=\"color: rgb(84, 84, 84);\">Tizimga kerakli hujjatlarni, shu jumladan, joriy ta’lim darajangiz to’g’risidagi hujjatlarni ham taqdim eting.</span></li><li classNamenamenamenamenamename=\"ql-align-justify\">Imtihonlar-<span style=\"color: rgb(84, 84, 84);\">Universitetning ichki testlaridan o’ting.</span></li><li classNamenamenamenamenamename=\"ql-align-justify\">Shartnoma (Kontrakt)-<span style=\"color: rgb(84, 84, 84);\">Javoblar e’lon qilinganidan so’ng, shartnomani rasmiylashtiring.</span></li></ol><p classNamenamenamenamenamename=\"ql-align-justify\"><br></p><p classNamenamenamenamenamename=\"ql-align-justify\">Yuqori sifatli zamonaviy ta’lim xizmatlarini ko‘rsatish, ilmiy-amaliy tadqiqotlar va kadrlar tayyorlash orqali mamlakatimizni ijtimoiy-iqtisodiy rivojlantirishga har tomonlama hissa qo‘shish to‘g‘risida xulosa. Ilmiy va amaliy tadqiqotlarni boshqarish va ta'minlash, sifatli ta'lim xizmatlari. Toshkent ijtimoiy innovatsiya universiteti talabalarga yuqori sifatli ta'lim xizmatlarini taklif etadi. Universitet mamlakatimizdagi yetakchi oliy ta’lim tashkiloti sifatida innovatsion yechimlar orqali ijtimoiy-iqtisodiy sohadagi o‘zgarishlarga salmoqli hissa qo‘shishga intiladi.</p><p classNamenamenamenamenamename=\"ql-align-justify\"><br></p><p classNamenamenamenamenamename=\"ql-align-justify\"><strong>Grantlar :</strong> Toshkent ijtimoiy innovatsiya universitetining ichki imtihonlarida yuqori ball to'plagan kunduzgi ta'lim shakli talabalari uchun ajratiladi. Jami ajratilgan grantlar soni 20 ta</p><p classNamenamenamenamenamename=\"ql-align-justify\"><br></p><p classNamenamenamenamenamename=\"ql-align-justify\"><strong>Talabalar yotoqxonalari :</strong> Mavjud</p><p classNamenamenamenamenamename=\"ql-align-justify\"><br></p><p classNamenamenamenamenamename=\"ql-align-justify\"><strong>Stipendiya : </strong>Mavjud.</p><p classNamenamenamenamenamename=\"ql-align-justify\"><br></p><p><br></p>",
+  "description_ru": "<p classNamenamenamenamenamename=\"ql-align-justify\"><strong>Об университете:</strong></p><p classNamenamenamenamenamename=\"ql-align-justify\">22 ноября 2022 года Министерство высшего образования, науки и инноваций Республики Узбекистан выдало Ташкентскому университету социальных инноваций лицензию № 168654 на оказание услуг высшего образования.</p><p classNamenamenamenamenamename=\"ql-align-justify\">Ташкентский университет социальных инноваций – неправительственная высшая образовательная организация, готовящая независимо мыслящие квалифицированные кадры, обладающие современными знаниями и навыками для социальной сферы и отраслей экономики на основе передовых образовательных технологий.</p><p classNamenamenamenamenamename=\"ql-align-justify\"><br></p><p><strong>Форма обучения</strong>: Выберите удобную для вас форму обучения и занимайтесь и работайте вместе или вовлекайтесь в полноценный образовательный процесс.</p><p><br></p><p><strong>Очная форма обучения: </strong>При очной форме обучения вы учитесь 4-5 дней в неделю: посещаете лекции и семинары, сдаете зачеты и экзамены. Учебный год делится на 2 семестра. Учебный год начинается с сентября и длится до июня.</p><p><br></p><p><strong>Форма заочного обучения: </strong>Форма заочного обучения осуществляется преимущественно с помощью дистанционных технологий обучения. Вам также может потребоваться приехать в университет на 2-4 недели в семестр.</p><p><br></p><p classNamenamenamenamenamename=\"ql-align-justify\"><strong>Вечернее обучение: </strong>В форме вечернего обучения вы учитесь 4-5 дней в неделю: посещаете лекции и семинары, сдаете зачеты и экзамены. Занятия будут проходить после 17:00.</p><p classNamenamenamenamenamename=\"ql-align-justify\"><br></p><p classNamenamenamenamenamename=\"ql-align-justify\"><strong>Условия приема:</strong></p><ol><li classNamenamenamenamenamename=\"ql-align-justify\">Оставить запрос-оставьте заявку на сайте о зачислении, используя свой номер мобильного телефона (для получения смс от нас и успешной регистрации в системе у вас должно быть достаточно средств на счету).</li><li classNamenamenamenamenamename=\"ql-align-justify\">Предоставить документы-предоставьте системе необходимую документацию, включая документацию о вашем текущем уровне образования.</li><li classNamenamenamenamenamename=\"ql-align-justify\">Экзамены-пройдите внутренние тесты университета.</li><li classNamenamenamenamenamename=\"ql-align-justify\">Договор (контракт)-после оглашения ответов оформить договор. Сумма годового контракта по направлениям обучения в вузе: скачать</li></ol><p classNamenamenamenamenamename=\"ql-align-justify\">Заключение об оказании качественных современных образовательных услуг, научных и практических исследований и всестороннем вкладе в социально-экономическое развитие нашей страны через подготовку кадров. Управление и обеспечение научных и прикладных исследований, качественных образовательных услуг. Ташкентский университет социальных инноваций предлагает студентам качественные образовательные услуги. Являясь ведущим высшим учебным заведением нашей страны, университет стремится внести значительный вклад в изменения в социально-экономической сфере посредством инновационных решений.</p><p classNamenamenamenamenamename=\"ql-align-justify\"><br></p><p><strong>Гранты: </strong>присуждаются студентам дневной формы обучения, набравшим высокие оценки на внутренних экзаменах Ташкентского университета социальных инноваций. Общее количество выделенных грантов – 20.</p><p><br></p><p><strong>Студенческие</strong> <strong>общежития:</strong> есть</p><p><br></p><p classNamenamenamenamenamename=\"ql-align-justify\"><strong>Стипендия:</strong> Доступна.</p>",
+  "description_en": "<p><strong>About the University:</strong></p><p>On November 22, 2022, the Ministry of Higher Education, Science and Innovation of the Republic of Uzbekistan issued license No. 168654 to Tashkent University of Social Innovation to provide higher education services. Tashkent University of Social Innovation is a non-governmental higher education organization that trains independent thinking qualified personnel with modern knowledge and skills for the social sphere and economic sectors based on advanced educational technologies.</p><p><br></p><p><br></p><p><strong>Form of education: </strong></p><p>Choose a form of education that is convenient for you and carry out your studies and work together or involve yourself in full educational processes.</p><p><br></p><p><strong>Full-time education: </strong>In the form of full-time education, you study 4-5 days a week: you attend lectures and seminars, take tests and exams. The academic year is divided into 2 semesters. The academic year starts from September and lasts until June.</p><p><strong>External education: </strong>The form of external education is mainly implemented with the help of distance learning technologies. You may also be required to come to the university for 2-4 weeks per semester.</p><p><strong>Evening study: </strong>In the form of evening study, you study 4-5 days a week: attend lectures and seminars, take tests and exams. Classes will be held after 17:00.</p><p><br></p><p><br></p><p><strong style=\"color: rgb(22, 22, 22);\">Admission requirements:</strong></p><ol><li>Submit an application-Submit an application on the website for admission using your mobile phone number (You need to have enough funds in your account to receive SMS messages and successfully register in the system).</li><li>Submit documents-<span style=\"color: rgb(84, 84, 84);\">Submit the necessary documents, including documents related to your current level of education.</span></li><li>Examinations-<span style=\"color: rgb(84, 84, 84);\">Pass internal exams of the university.</span></li><li>Contract-<span style=\"color: rgb(84, 84, 84);\">After the responses are announced, formalize the contract. The annual contract amount for university programs is:</span><a href=\"https://iiiu.uz/wp-content/uploads/2023/03/Yuklab-olish.pdf\" rel=\"noopener noreferrer\" target=\"_blank\" style=\"color: rgb(51, 153, 102); background-color: initial;\"><strong><em>Download</em></strong></a></li></ol><p>Conclusion on the provision of high-quality modern educational services, scientific and practical research and the comprehensive contribution to the socio-economic development of our country through personnel training. Management and provision of scientific and applied research, quality education services. Tashkent University of Social Innovation offers high-quality educational services to students. As a leading higher education institution in our country, the university strives to make a significant contribution to changes in the socio-economic sphere through innovative solutions.</p><p><br></p><p><br></p><p><strong>Grants: </strong>awarded to full-time students who have scored high marks in the internal exams of Tashkent University of Social Innovation. The total number of allocated grants is 20.</p><p><br></p><p><strong>Student dormitory :</strong> Available</p><p><br></p><p><strong>Scholarship : </strong>Available.</p>",
+  "founded_year": "2022-08-28T19:00:00.000Z",
+  "students_count": 1500,
+  "current_quota": 2000,
+  "has_accomodation": false,
+  "admission_phone": "+998 55 506 79 75",
+  "web_site": "https://tiiu.uz/",
+  "instagram_username": "https://www.instagram.com/tiiu_uz/",
+  "telegram_username": "https://t.me/iii_universiteti",
+  "linkedin_username": null,
+  "youtube_username": "https://www.youtube.com/c/InhaUz",
+  "facebook_username": "https://www.facebook.com/iiiu.uz",
+  "support_email": "info@tiiu.uz",
+  "lead_limit": 7500,
+  "is_promoted": 0,
+  "admission_start_date": "2025-06-01T00:00:00.000Z",
+  "admission_deadline": "2025-09-30T00:00:00.000Z",
+  "gallery": [
+    "uni_gallery/fc11b4b9-ef34-407a-8780-f1e92d665e9a.jpg",
+    "uni_gallery/9d6fa9fd-7345-4ba0-9d30-d505edc23ea2.jpg",
+    "uni_gallery/1b21c015-6402-4f5e-9c75-b785bbb1ad7d.jpg",
+    "uni_gallery/a7c1a4eb-58e2-4112-92c1-1f9ca6f5b604.jpg"
+  ],
+  "address_uz": "Toshkent shahri, Yangi hayot tumani, Qanora ko‘chasi 44-uy",
+  "address_ru": "г.Ташкент, р-н Новая Жизнь, ул. Канора, 44",
+  "address_en": "Tashkent city, Yangi hayot district, Qanora street, house 44.",
+  "institution_category_id": 4,
+  "institution_type": "university",
+  "minimal_tuition_fee": 12000000,
+  "maximal_tuition_fee": 20000000,
+  "latitude": " 69.216849",
+  "longitude": "41.239414",
+  "certification_link": "univer_cert/a57e5710-001f-4bc9-89db-078ad31f3106.pdf",
+  "accreditation_certificate": "univer_cert/840d0b8f-4d0e-4508-9ceb-bb79f4baa6d6.pdf",
+  "slug": "toshkent-ijtimoiy-innovatsiya-universiteti",
+  "is_open_for_admission": false,
+  "mtdt_title_uz": "Innovatsion va Ijtimoiy-Iqtisodiyot Universiteti: IIIU",
+  "mtdt_title_ru": "Инновационно-социально-экономический университет",
+  "mtdt_description_uz": "Innovatsion va ijtimoiy iqtisodiyot universiteti ilg‘or ta’lim texnologiyalariga asoslangan holda ijtimoiy soha va iqtisodiyot tarmoqlari uchun zamonaviy bilim va ko‘nikmalarga ega.",
+  "mtdt_description_ru": "Университет инновационной и социальной экономики-негосударственная организация высшего образования",
+  "mtdt_description_en": "The university of Innovative and Socio-economic Economics is equipped with modern knowledge and skills for social and economic sectors, based on advanced educational technologies.",
+  "directionCount": 25
+}

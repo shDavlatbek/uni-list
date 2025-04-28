@@ -1,0 +1,238 @@
+JSON Structure Analysis:
+==================================================
+Found 40 unique keys
+
+Key: '_scraped_slug'
+  Possible value types: str
+
+Key: 'application_deadline'
+  Possible value types: str
+
+Key: 'application_start_date'
+  Possible value types: str
+
+Key: 'category_id'
+  Possible value types: int
+
+Key: 'contract_types'
+  Possible value types: array of object
+
+Key: 'degrees'
+  Possible value types: array of object
+
+Key: 'direction_description_en'
+  Possible value types: NoneType, str
+
+Key: 'direction_description_ru'
+  Possible value types: NoneType, str
+
+Key: 'direction_description_uz'
+  Possible value types: NoneType, str
+
+Key: 'direction_id'
+  Possible value types: int
+
+Key: 'direction_name_en'
+  Possible value types: NoneType, str
+
+Key: 'direction_name_ru'
+  Possible value types: str
+
+Key: 'direction_name_uz'
+  Possible value types: str
+
+Key: 'direction_slug'
+  Possible value types: str
+
+Key: 'education_languages'
+  Possible value types: array of object
+
+Key: 'education_type_languages'
+  Possible value types: array of object
+
+Key: 'education_types'
+  Possible value types: array of object
+
+Key: 'first_subject'
+  Possible value types: NoneType, str
+
+Key: 'full_name_en'
+  Possible value types: str
+
+Key: 'full_name_ru'
+  Possible value types: str
+
+Key: 'full_name_uz'
+  Possible value types: str
+
+Key: 'has_mandatory_subjects'
+  Possible value types: NoneType, str
+
+Key: 'has_stipend'
+  Possible value types: bool
+
+Key: 'institution_category_id'
+  Possible value types: int
+
+Key: 'institution_type'
+  Possible value types: str
+
+Key: 'is_open_for_admission'
+  Possible value types: bool
+
+Key: 'is_promoted'
+  Possible value types: int
+
+Key: 'location_en'
+  Possible value types: str
+
+Key: 'location_ru'
+  Possible value types: str
+
+Key: 'location_uz'
+  Possible value types: str
+
+Key: 'logo'
+  Possible value types: str
+
+Key: 'name_ru'
+  Possible value types: str
+
+Key: 'name_uz'
+  Possible value types: str
+
+Key: 'requirement_ru'
+  Possible value types: NoneType, str
+
+Key: 'requirement_uz'
+  Possible value types: NoneType, str
+
+Key: 'second_subject'
+  Possible value types: NoneType, str
+
+Key: 'slug'
+  Possible value types: str
+
+Key: 'status'
+  Possible value types: str
+
+Key: 'tuition_fees'
+  Possible value types: array of object
+
+Key: 'university_id'
+  Possible value types: int
+
+
+Sample JSON object with all possible keys:
+==================================================
+{
+  "name_uz": "Toshkent shahri",
+  "name_ru": "Город Ташкент",
+  "institution_category_id": 5,
+  "institution_type": "university",
+  "direction_id": 1,
+  "direction_name_uz": "Kompyuter va dasturiy injiniring ",
+  "direction_name_ru": "Компьютерные науки и информационная инженерия",
+  "direction_name_en": "Computer Science and Information Engineering",
+  "direction_description_uz": "<p><strong>Computer Science and Information Engineering</strong></p><p><br></p><p>Informatika hisoblash, avtomatlashtirish va axborotni oʻrganadi. Kompyuter fanlari nazariy fanlarni (masalan, algoritmlar, hisoblash nazariyasi, axborot nazariyasi va avtomatlashtirish) amaliy fanlarga (jumladan, apparat va Dasturlash|dasturiy taʼminotni] va joriy etish) qamrab oladi. Kompyuter fanlari odatda akademik tadqiqot sohasi hisoblanadi va kompyuter dasturlashdan farq qiladi.</p><p><strong>Axborot tizimi</strong>&nbsp;— axborotni saqlash, qidirish va qayta ishlash uchun moʻljallangan, axborotni taʼminlovchi va tarqatuvchi(ISO/IEC 2382:2015) hamda tegishli tashkiliy resurslar (inson, texnik, moliyaviy va boshqalar) tizimidir.</p><p>AT axborotga ehtiyojmand odamlarni oʻz vaqtida toʻgʻri maʼlumot bilan taʼminlash, yaʼni maʼlum bir predmet doirasidagi aniq axborotga boʻlgan ehtiyojni qondirish, axborot tizimlarining faoliyat koʻrsatish natijasi esa axborot mahsulotlari&nbsp;— hujjatlar, axborot massivlari, maʼlumotlar bazalari va axborot xizmatlaridir.</p><p><br></p><p>Imtihon bloki: <strong>Matematika, fizika</strong></p>",
+  "direction_description_ru": "<p><strong>Информатике и информационной инженерии. </strong></p><p><br></p><p>Информатика изучает вычисления, автоматизацию и информацию. Информатика охватывает теоретические дисциплины (такие как алгоритмы, теория вычислений, теория информации и автоматизация) и прикладные дисциплины (включая аппаратное и программное обеспечение и реализацию). Информатика обычно считается областью академических исследований и отличается от компьютерного программирования. </p><p>Информационная система — это система предоставления и распространения информации (ISO/IEC 2382:2015) и связанных с ней организационных ресурсов (человеческих, технических, финансовых и т. д.), предназначенных для хранения, поиска и обработки информации. ИТ – это предоставление своевременной и корректной информации людям, нуждающимся в информации, то есть удовлетворение потребности в конкретной информации в рамках определенного субъекта, а результатом работы информационных систем является информационная продукция – документы, информационные массивы, базы данных и информация. услуги. </p><p><br></p><p><strong>Экзаменационный блок: Математика, физика </strong></p>",
+  "direction_description_en": "<p><strong>Computer Science and Information </strong></p><p><br></p><p>Engineering Computer science studies computing, automation, and information. Computer science spans theoretical disciplines (such as algorithms, computational theory, information theory, and automation) to applied disciplines (including hardware and software and implementation). Computer science is generally considered a field of academic study and is distinct from computer programming. Information system is a system of providing and disseminating information (ISO/IEC 2382:2015) and related organizational resources (human, technical, financial, etc.) designed for storing, searching and processing information. IT is to provide timely and correct information to people who need information, that is, to satisfy the need for specific information within a certain subject, and the result of the operation of information systems is information products - documents, information arrays, databases and information services. </p><p><br></p><p>Exam block: <strong>Mathematics, physics</strong></p>",
+  "university_id": 2,
+  "logo": "logo/69f92d22-1b3e-463c-984d-84162b30d3c8.png",
+  "status": "active",
+  "has_mandatory_subjects": "true",
+  "first_subject": "Matematika",
+  "second_subject": "Ingliz tili",
+  "is_open_for_admission": false,
+  "direction_slug": "kompyuter-va-dasturiy-injiniring-2",
+  "slug": "inha-university-in-tashkent",
+  "full_name_uz": "Inha University in Tashkent",
+  "full_name_ru": "Inha University in Tashkent",
+  "full_name_en": "Inha University in Tashkent",
+  "category_id": 37,
+  "is_promoted": 0,
+  "location_uz": "Toshkent shahri",
+  "location_ru": "Toshkent shahri",
+  "location_en": "Toshkent shahri",
+  "requirement_uz": "IELTS: 5.0 yoki undan yuqori / TOEFL iBT: 50 yoki undan yuqori",
+  "requirement_ru": "IELTS: 5.0 или выше / TOEFL iBT: 50 или выше",
+  "has_stipend": false,
+  "application_deadline": "2025-09-30T00:00:00.000Z",
+  "application_start_date": "2025-06-01T00:00:00.000Z",
+  "contract_types": [
+    {
+      "contract_type_id": 2,
+      "contract_type_name_en": "Tuition fee",
+      "contract_type_name_ru": "Контракт",
+      "contract_type_name_uz": "To'lov kontrakt"
+    }
+  ],
+  "tuition_fees": [
+    {
+      "academic_year": null,
+      "education_type_id": 1,
+      "local_tuition_fee": 38100000,
+      "education_type_name_en": "Full time",
+      "education_type_name_ru": "Очное",
+      "education_type_name_uz": "Kunduzgi",
+      "international_tuition_fee": null
+    }
+  ],
+  "degrees": [
+    {
+      "degree_id": 1,
+      "degree_name_en": "Bachelor",
+      "degree_name_ru": "Бакалавр",
+      "degree_name_uz": "Bakalavr"
+    }
+  ],
+  "education_types": [
+    {
+      "education_type_id": 1,
+      "education_type_name_en": "Full time",
+      "education_type_name_ru": "Очное",
+      "education_type_name_uz": "Kunduzgi"
+    }
+  ],
+  "education_type_languages": [
+    {
+      "grant": null,
+      "contract": null,
+      "grant_quota": null,
+      "academic_year": null,
+      "contract_quota": null,
+      "education_type_id": 1,
+      "education_language_id": 2,
+      "education_language_name_en": "English",
+      "education_language_name_ru": "Английский язык",
+      "education_language_name_uz": "Ingliz tili"
+    },
+    {
+      "grant": null,
+      "contract": null,
+      "grant_quota": null,
+      "academic_year": null,
+      "contract_quota": null,
+      "education_type_id": 1,
+      "education_language_id": 3,
+      "education_language_name_en": "Russian",
+      "education_language_name_ru": "Русский язык",
+      "education_language_name_uz": "Rus tili"
+    }
+  ],
+  "education_languages": [
+    {
+      "education_language_id": 2,
+      "education_language_name_en": "English",
+      "education_language_name_ru": "Английский язык",
+      "education_language_name_uz": "Ingliz tili"
+    },
+    {
+      "education_language_id": 3,
+      "education_language_name_en": "Russian",
+      "education_language_name_ru": "Русский язык",
+      "education_language_name_uz": "Rus tili"
+    }
+  ],
+  "_scraped_slug": "kompyuter-va-dasturiy-injiniring-2"
+}
