@@ -12,7 +12,7 @@
         <label for="university_id">Universitet:</label>
         <select name="university_id" id="university_id">
             <option value="">Barchasi</option>
-            {% for uni in filter_options.universities %}
+            {% for uni in filter_options.universities %} {# Use updated list from view #}
                 <option value="{{ uni.id }}" {% if applied_filters.university_id == uni.id|stringformat:"s" %}selected{% endif %}>{{ uni.full_name }}</option>
             {% endfor %}
         </select>
@@ -50,11 +50,11 @@
 
     <div class="filter-section">
         <label>Ta'lim Turi:</label>
-        <div class="filter-checkbox-group">
+        <div class="filter-checkbox-group space-y-1">
             {% for type in filter_options.education_types %}
             <div>
-                <input type="checkbox" name="edu_type" value="{{ type.id }}" id="edu_type_{{ type.id }}" {% if type.id|stringformat:"s" in applied_filters.getlist.edu_type %}checked{% endif %}>
-                <label for="edu_type_{{ type.id }}">{{ type.name }}</label>
+                <input type="checkbox" name="edu_type" value="{{ type.id }}" id="edu_type_{{ type.id }}" {% if type.id|stringformat:"s" in applied_filters.getlist.edu_type %}checked{% endif %} class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                <label for="edu_type_{{ type.id }}" class="ml-2 text-sm text-gray-700">{{ type.name }}</label>
             </div>
             {% endfor %}
         </div>
@@ -62,11 +62,11 @@
 
      <div class="filter-section">
         <label>Ta'lim Tili:</label>
-        <div class="filter-checkbox-group">
+        <div class="filter-checkbox-group space-y-1">
             {% for lang in filter_options.education_languages %}
             <div>
-                <input type="checkbox" name="edu_lang" value="{{ lang.id }}" id="edu_lang_{{ lang.id }}" {% if lang.id|stringformat:"s" in applied_filters.getlist.edu_lang %}checked{% endif %}>
-                <label for="edu_lang_{{ lang.id }}">{{ lang.name }}</label>
+                <input type="checkbox" name="edu_lang" value="{{ lang.id }}" id="edu_lang_{{ lang.id }}" {% if lang.id|stringformat:"s" in applied_filters.getlist.edu_lang %}checked{% endif %} class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                <label for="edu_lang_{{ lang.id }}" class="ml-2 text-sm text-gray-700">{{ lang.name }}</label>
             </div>
             {% endfor %}
         </div>
@@ -74,11 +74,11 @@
 
     <div class="filter-section">
         <label>Darajalar:</label>
-        <div class="filter-checkbox-group">
+        <div class="filter-checkbox-group space-y-1">
             {% for degree in filter_options.degrees %}
             <div>
-                <input type="checkbox" name="degree" value="{{ degree.id }}" id="degree_{{ degree.id }}" {% if degree.id|stringformat:"s" in applied_filters.getlist.degree %}checked{% endif %}>
-                <label for="degree_{{ degree.id }}">{{ degree.name }}</label>
+                <input type="checkbox" name="degree" value="{{ degree.id }}" id="degree_{{ degree.id }}" {% if degree.id|stringformat:"s" in applied_filters.getlist.degree %}checked{% endif %} class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                <label for="degree_{{ degree.id }}" class="ml-2 text-sm text-gray-700">{{ degree.name }}</label>
             </div>
             {% endfor %}
         </div>
@@ -86,21 +86,21 @@
 
      <div class="filter-section">
         <label>Qo'shimcha:</label>
-         <div class="filter-checkbox-group">
+         <div class="filter-checkbox-group space-y-1">
              <div>
-                <input type="checkbox" name="has_stipend" value="true" id="has_stipend" {% if applied_filters.has_stipend == 'true' %}checked{% endif %}>
-                <label for="has_stipend">Stipendiya mavjud</label>
+                <input type="checkbox" name="has_stipend" value="true" id="has_stipend" {% if applied_filters.has_stipend == 'true' %}checked{% endif %} class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                <label for="has_stipend" class="ml-2 text-sm text-gray-700">Stipendiya mavjud</label>
              </div>
              </div>
     </div>
 
     <div class="filter-section">
         <label for="min_price">Minimal Narx (Universitet bo'yicha):</label>
-        <input type="number" name="min_price" id="min_price" placeholder="{{ filter_options.min_price }}" value="{{ applied_filters.min_price|default:'' }}" min="0">
+        <input type="number" name="min_price" id="min_price" placeholder="{{ filter_options.min_price|floatformat:"0" }}" value="{{ applied_filters.min_price|default:'' }}" min="0" class="text-sm">
     </div>
      <div class="filter-section">
         <label for="max_price">Maksimal Narx (Universitet bo'yicha):</label>
-        <input type="number" name="max_price" id="max_price" placeholder="{{ filter_options.max_price }}" value="{{ applied_filters.max_price|default:'' }}" min="0">
+        <input type="number" name="max_price" id="max_price" placeholder="{{ filter_options.max_price|floatformat:"0" }}" value="{{ applied_filters.max_price|default:'' }}" min="0" class="text-sm">
     </div>
 
 {% endblock %}
@@ -115,18 +115,26 @@
 <div class="space-y-4">
     {% for direction in page_obj %}
     <div class="bg-white rounded-lg shadow p-4 flex flex-col sm:flex-row gap-4 items-start hover:shadow-md transition duration-200">
-         <div class="flex-shrink-0 w-16 h-16 bg-gray-200 rounded-md flex items-center justify-center">
-            {% if direction.university.logo %}
-             <img src="/media/{{ direction.university.logo }}" alt="{{ direction.university.full_name }} logosi" class="max-h-full max-w-full object-contain p-1" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-xs text-gray-500\'>Logo</span>';">
-             {% else %}
-             <span class="text-xs text-gray-500">Logo</span>
-             {% endif %}
+         <div class="flex-shrink-0 w-16 h-16 bg-gray-200 rounded-md flex items-center justify-center overflow-hidden">
+             <a href="{% url 'university_app:university_detail' slug=direction.university.slug %}"> {# Link logo to university page #}
+                {% if direction.university.logo %}
+                 <img src="/media/{{ direction.university.logo }}" alt="{{ direction.university.full_name }} logosi" class="max-h-full max-w-full object-contain p-1" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-xs text-gray-500\'>Logo</span>';">
+                 {% else %}
+                 <span class="text-xs text-gray-500">Logo</span>
+                 {% endif %}
+             </a>
          </div>
          <div class="flex-grow">
-             <h3 class="text-lg font-semibold text-blue-700 mb-1">
-                 {{ direction.direction_name }}
-                 </h3>
-             <p class="text-sm font-medium text-gray-800">{{ direction.university.full_name }}</p>
+             <h3 class="text-lg font-semibold text-blue-700 mb-1 hover:text-blue-900">
+                  <a href="{% url 'university_app:direction_detail' slug=direction.direction_slug %}" class="hover:underline"> {# Link title to direction page #}
+                    {{ direction.direction_name }}
+                 </a>
+             </h3>
+             <p class="text-sm font-medium text-gray-800 hover:text-black">
+                  <a href="{% url 'university_app:university_detail' slug=direction.university.slug %}" class="hover:underline"> {# Link university name to its page #}
+                    {{ direction.university.full_name }}
+                  </a>
+             </p>
              {% if direction.category %}
              <p class="text-sm text-gray-600 mb-1">Kategoriya: {{ direction.category.name }}</p>
              {% endif %}
@@ -150,7 +158,11 @@
                      <span class="inline-block bg-blue-100 rounded-full px-2 py-0.5 text-xs font-medium text-blue-800">{{ lang.name }}</span>
                  {% endfor %}
              </div>
-             </div>
+              {# Link to detail page #}
+              <a href="{% url 'university_app:direction_detail' slug=direction.direction_slug %}" class="mt-3 inline-block text-blue-600 hover:underline text-sm font-medium">
+                 Batafsil &rarr;
+              </a>
+         </div>
     </div>
     {% empty %}
     <p class="text-center text-gray-500">Filtrlarga mos yo'nalishlar topilmadi.</p>

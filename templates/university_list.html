@@ -30,11 +30,11 @@
 
     <div class="filter-section">
         <label>Ta'lim Turi:</label>
-        <div class="filter-checkbox-group">
+        <div class="filter-checkbox-group space-y-1">
             {% for type in filter_options.education_types %}
             <div>
-                <input type="checkbox" name="edu_type" value="{{ type.id }}" id="edu_type_{{ type.id }}" {% if type.id|stringformat:"s" in applied_filters.getlist.edu_type %}checked{% endif %}>
-                <label for="edu_type_{{ type.id }}">{{ type.name }}</label>
+                <input type="checkbox" name="edu_type" value="{{ type.id }}" id="edu_type_{{ type.id }}" {% if type.id|stringformat:"s" in applied_filters.getlist.edu_type %}checked{% endif %} class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                <label for="edu_type_{{ type.id }}" class="ml-2 text-sm text-gray-700">{{ type.name }}</label>
             </div>
             {% endfor %}
         </div>
@@ -42,11 +42,11 @@
 
      <div class="filter-section">
         <label>Ta'lim Tili:</label>
-        <div class="filter-checkbox-group">
+        <div class="filter-checkbox-group space-y-1">
             {% for lang in filter_options.education_languages %}
             <div>
-                <input type="checkbox" name="edu_lang" value="{{ lang.id }}" id="edu_lang_{{ lang.id }}" {% if lang.id|stringformat:"s" in applied_filters.getlist.edu_lang %}checked{% endif %}>
-                <label for="edu_lang_{{ lang.id }}">{{ lang.name }}</label>
+                <input type="checkbox" name="edu_lang" value="{{ lang.id }}" id="edu_lang_{{ lang.id }}" {% if lang.id|stringformat:"s" in applied_filters.getlist.edu_lang %}checked{% endif %} class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                <label for="edu_lang_{{ lang.id }}" class="ml-2 text-sm text-gray-700">{{ lang.name }}</label>
             </div>
             {% endfor %}
         </div>
@@ -54,11 +54,11 @@
 
     <div class="filter-section">
         <label>Darajalar:</label>
-        <div class="filter-checkbox-group">
+        <div class="filter-checkbox-group space-y-1">
             {% for degree in filter_options.degrees %}
             <div>
-                <input type="checkbox" name="degree" value="{{ degree.id }}" id="degree_{{ degree.id }}" {% if degree.id|stringformat:"s" in applied_filters.getlist.degree %}checked{% endif %}>
-                <label for="degree_{{ degree.id }}">{{ degree.name }}</label>
+                <input type="checkbox" name="degree" value="{{ degree.id }}" id="degree_{{ degree.id }}" {% if degree.id|stringformat:"s" in applied_filters.getlist.degree %}checked{% endif %} class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                <label for="degree_{{ degree.id }}" class="ml-2 text-sm text-gray-700">{{ degree.name }}</label>
             </div>
             {% endfor %}
         </div>
@@ -66,25 +66,25 @@
 
     <div class="filter-section">
         <label>Qo'shimcha:</label>
-         <div class="filter-checkbox-group">
+         <div class="filter-checkbox-group space-y-1">
              <div>
-                <input type="checkbox" name="has_grant" value="true" id="has_grant" {% if applied_filters.has_grant == 'true' %}checked{% endif %}>
-                <label for="has_grant">Grant mavjud</label>
+                <input type="checkbox" name="has_grant" value="true" id="has_grant" {% if applied_filters.has_grant == 'true' %}checked{% endif %} class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                <label for="has_grant" class="ml-2 text-sm text-gray-700">Grant mavjud</label>
              </div>
              <div>
-                 <input type="checkbox" name="has_accomodation" value="true" id="has_accomodation" {% if applied_filters.has_accomodation == 'true' %}checked{% endif %}>
-                 <label for="has_accomodation">Yotoqxona mavjud</label>
+                 <input type="checkbox" name="has_accomodation" value="true" id="has_accomodation" {% if applied_filters.has_accomodation == 'true' %}checked{% endif %} class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                 <label for="has_accomodation" class="ml-2 text-sm text-gray-700">Yotoqxona mavjud</label>
              </div>
          </div>
     </div>
 
     <div class="filter-section">
         <label for="min_price">Minimal Narx:</label>
-        <input type="number" name="min_price" id="min_price" placeholder="{{ filter_options.min_price }}" value="{{ applied_filters.min_price|default:'' }}" min="0">
+        <input type="number" name="min_price" id="min_price" placeholder="{{ filter_options.min_price|floatformat:"0" }}" value="{{ applied_filters.min_price|default:'' }}" min="0" class="text-sm">
     </div>
      <div class="filter-section">
         <label for="max_price">Maksimal Narx:</label>
-        <input type="number" name="max_price" id="max_price" placeholder="{{ filter_options.max_price }}" value="{{ applied_filters.max_price|default:'' }}" min="0">
+        <input type="number" name="max_price" id="max_price" placeholder="{{ filter_options.max_price|floatformat:"0" }}" value="{{ applied_filters.max_price|default:'' }}" min="0" class="text-sm">
     </div>
 
 
@@ -98,55 +98,71 @@
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for uni in page_obj %}
-    <div class="bg-white rounded-lg shadow overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-lg">
-        {% if uni.logo %}
-        <div class="h-32 bg-gray-200 flex items-center justify-center">
-             <img src="/media/{{ uni.logo }}" alt="{{ uni.full_name }} logosi" class="max-h-full max-w-full object-contain p-2" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-gray-500\'>Logo yo\'q</span>';">
-             </div>
-        {% else %}
-         <div class="h-32 bg-gray-200 flex items-center justify-center text-gray-500">Logo yo'q</div>
-        {% endif %}
-        <div class="p-4">
-            <h3 class="text-lg font-semibold text-blue-700 mb-1">
-                {{ uni.full_name }}
+    <div class="bg-white rounded-lg shadow overflow-hidden flex flex-col justify-between transform transition duration-300 hover:scale-[1.02] hover:shadow-xl">
+        <div> {# Content wrapper #}
+            <a href="{% url 'university_app:university_detail' slug=uni.slug %}" class="block h-36 bg-gray-200 flex items-center justify-center overflow-hidden">
+                 {% if uni.logo %}
+                 <img src="/media/{{ uni.logo }}" alt="{{ uni.full_name }} logosi" class="max-h-full max-w-full object-contain p-2" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-gray-500\'>Logo yo\'q</span>';">
+                 {% else %}
+                 <span class="text-gray-500">Logo yo'q</span>
+                 {% endif %}
+            </a>
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-blue-700 mb-1 hover:text-blue-900">
+                    <a href="{% url 'university_app:university_detail' slug=uni.slug %}" class="hover:underline">
+                        {{ uni.full_name }}
+                    </a>
                 </h3>
-            {% if uni.location %}
-            <p class="text-sm text-gray-600 mb-1">{{ uni.location.name }}</p>
-            {% endif %}
-            {% if uni.institution_category %}
-            <p class="text-sm text-gray-500 mb-2">{{ uni.institution_category.name }}</p>
-            {% endif %}
+                {% if uni.location %}
+                <p class="text-sm text-gray-600 mb-1">{{ uni.location.name }}</p>
+                {% endif %}
+                {% if uni.institution_category %}
+                <p class="text-sm text-gray-500 mb-2">{{ uni.institution_category.name }}</p>
+                {% endif %}
 
-            <div class="text-xs text-gray-500 mb-3 space-y-1">
-                 {% if uni.minimal_tuition_fee is not None %}
-                 <span>Narx: {{ uni.minimal_tuition_fee|floatformat:"0" }} so'm dan</span>
-                 {% endif %}
-                 {% if uni.has_grant %}
-                 <span class="block text-green-600 font-medium">Grant mavjud</span>
-                 {% endif %}
-                 {% if uni.has_accomodation %}
-                 <span class="block text-indigo-600">Yotoqxona mavjud</span>
-                 {% endif %}
-            </div>
+                <div class="text-xs text-gray-500 mb-3 space-y-1">
+                     {% if uni.minimal_tuition_fee is not None %}
+                     <span>Narx: {{ uni.minimal_tuition_fee|floatformat:"0" }} so'm dan</span>
+                     {% endif %}
+                     {% if uni.has_grant %}
+                     <span class="block text-green-600 font-medium">Grant mavjud</span>
+                     {% endif %}
+                     {% if uni.has_accomodation %}
+                     <span class="block text-indigo-600">Yotoqxona mavjud</span>
+                     {% endif %}
+                </div>
 
-            {% if uni.education_types.all %}
-            <div class="mb-2">
-                <span class="text-xs font-semibold">Turlar:</span>
-                {% for type in uni.education_types.all %}
-                    <span class="inline-block bg-gray-200 rounded-full px-2 py-0.5 text-xs font-medium text-gray-700 mr-1 mb-1">{{ type.name }}</span>
-                {% endfor %}
-            </div>
-            {% endif %}
+                {% if uni.education_types.all %}
+                <div class="mb-2">
+                    <span class="text-xs font-semibold">Turlar:</span>
+                    {% for type in uni.education_types.all|slice:":3" %} {# Show first 3 #}
+                        <span class="inline-block bg-gray-200 rounded-full px-2 py-0.5 text-xs font-medium text-gray-700 mr-1 mb-1">{{ type.name }}</span>
+                    {% endfor %}
+                    {% if uni.education_types.all|length > 3 %}
+                         <span class="inline-block bg-gray-200 rounded-full px-2 py-0.5 text-xs font-medium text-gray-700 mr-1 mb-1">...</span>
+                    {% endif %}
+                </div>
+                {% endif %}
 
-             {% if uni.education_languages.all %}
-            <div>
-                <span class="text-xs font-semibold">Tillar:</span>
-                {% for lang in uni.education_languages.all %}
-                    <span class="inline-block bg-blue-100 rounded-full px-2 py-0.5 text-xs font-medium text-blue-800 mr-1 mb-1">{{ lang.name }}</span>
-                {% endfor %}
+                 {% if uni.education_languages.all %}
+                <div>
+                    <span class="text-xs font-semibold">Tillar:</span>
+                    {% for lang in uni.education_languages.all|slice:":3" %} {# Show first 3 #}
+                        <span class="inline-block bg-blue-100 rounded-full px-2 py-0.5 text-xs font-medium text-blue-800 mr-1 mb-1">{{ lang.name }}</span>
+                    {% endfor %}
+                     {% if uni.education_languages.all|length > 3 %}
+                         <span class="inline-block bg-blue-100 rounded-full px-2 py-0.5 text-xs font-medium text-blue-800 mr-1 mb-1">...</span>
+                    {% endif %}
+                </div>
+                {% endif %}
             </div>
-            {% endif %}
-             </div>
+        </div>
+         {# Footer for link #}
+         <div class="p-4 border-t mt-auto">
+             <a href="{% url 'university_app:university_detail' slug=uni.slug %}" class="text-blue-600 hover:underline text-sm font-medium">
+                 Batafsil ko'rish &rarr;
+             </a>
+         </div>
     </div>
     {% empty %}
     <p class="col-span-full text-center text-gray-500">Filtrlarga mos universitetlar topilmadi.</p>
