@@ -8,3 +8,4 @@ django-nested-admin==4.1.1
 python-monkey-business==1.1.0
 sqlparse==0.5.3
 tzdata==2025.2
+gunicorn

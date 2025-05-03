@@ -1,6 +1,23 @@
 {% extends 'base.html' %} {% load static %} {% load humanize %} {% block title %}{{ university.full_name }}{% endblock %} {% block content %}
 <div class="container my-4">
   <!-- University Header -->
+  <div class="d-flex justify-content-between align-items-center my-4">
+
+    {# Back #}
+    <a href="{{ back_url }}"
+       class="btn btn-outline-secondary rounded-pill">
+        <i class="fas fa-arrow-left me-2"></i> Ortga
+    </a>
+  
+    {# Share #}
+    <button type="button"
+            id="shareBtn"
+            class="btn btn-outline-primary rounded-pill"
+            data-share-url="{{ share_url }}">
+        <i class="fas fa-share-alt me-2"></i> Ulashish
+    </button>
+  
+  </div>
   <div class="card border-0 mb-4">
     <div class="card-body p-4">
       <div class="d-flex align-items-center mb-3">
@@ -90,7 +107,7 @@
         <a class="nav-link" href="#programs">Ta'lim yo'nalishlari</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#gallery">Galereya</a>
+        <a class="nav-link" href="#gal">Galereya</a>
       </li>
     </ul>
   </div>
@@ -199,7 +216,7 @@
             <div class="d-flex mt-3">
               {% if university.telegram_username %}
               <a
-                href="https://t.me/{{ university.telegram_username }}"
+                href="{{ university.telegram_username }}"
                 target="_blank"
                 class="btn btn-sm btn-outline-primary rounded-circle me-2"
                 style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center">
@@ -207,7 +224,7 @@
               </a>
               {% endif %} {% if university.facebook_username %}
               <a
-                href="https://facebook.com/{{ university.facebook_username }}"
+                href="{{ university.facebook_username }}"
                 target="_blank"
                 class="btn btn-sm btn-outline-primary rounded-circle me-2"
                 style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center">
@@ -215,7 +232,7 @@
               </a>
               {% endif %} {% if university.instagram_username %}
               <a
-                href="https://instagram.com/{{ university.instagram_username }}"
+                href="{{ university.instagram_username }}"
                 target="_blank"
                 class="btn btn-sm btn-outline-primary rounded-circle me-2"
                 style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center">
@@ -223,7 +240,7 @@
               </a>
               {% endif %} {% if university.youtube_username %}
               <a
-                href="https://youtube.com/{{ university.youtube_username }}"
+                href="{{ university.youtube_username }}"
                 target="_blank"
                 class="btn btn-sm btn-outline-primary rounded-circle me-2"
                 style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center">
@@ -534,7 +551,7 @@
   </section>
 
   <!-- Gallery Section -->
-  <section id="gallery" class="mb-5">
+  <section id="gal" class="mb-5">
     <div class="card border-0 mb-4">
       <div class="card-header">
         <h2 class="h5">Galereya</h2>
