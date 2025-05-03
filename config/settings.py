@@ -31,14 +31,34 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'django_cleanup.apps.CleanupConfig',
+    'nested_admin',
+    'ckeditor',
     'web',
 ]
+
+# CKEditor configuration
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink'],
+            ['RemoveFormat', 'Source']
+        ],
+        'height': 300,
+        'width': '100%',
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -117,8 +137,33 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'assets',
+]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+JAZZMIN_SETTINGS = {
+    "order_with_respect_to": ["web.University", "web.Direction", "web.TuitionFee", "web.Gallery", "web.InstitutionCategory", "web.Location", "web.Category"],
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "web.University": "fas fa-university",
+        "web.Direction": "fas fa-graduation-cap",
+        "web.TuitionFee": "fas fa-money-bill",
+        "web.Gallery": "fas fa-images",
+        "web.InstitutionCategory": "fas fa-building",
+        "web.Location": "fas fa-map-marker-alt",
+        "web.Category": "fas fa-folder",
+        "web.EducationType": "fas fa-book",
+        "web.EducationLanguage": "fas fa-language",
+        "web.Degree": "fas fa-graduation-cap",
+    },
+}

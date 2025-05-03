@@ -1,0 +1,484 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Universitetlar - Ro'yxat{% endblock %}
+
+{% block content %}
+<main class="container py-4">
+    <div class="row">
+        <!-- Filters Sidebar -->
+        <div class="col-lg-3">
+            <div class="mb-4">
+                <h5 class="mb-3">Jami {{ page_obj.paginator.count }} ta natija ko'rsatilmoqda</h5>
+                
+                    <div class="card">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold m-0">Filter</h5>
+                            <a href="{% url 'universities:university_list' %}" class="btn btn-outline-danger rounded-pill px-4">Tozalash</a>
+                        </div>
+                        
+                        <form action="{% url 'universities:university_list' %}" method="get" id="filters-form">
+                            <!-- Search Input -->
+                            <div class="mb-4 pb-3 border-bottom">
+                                <label for="search" class="form-label fw-bold mb-2">Universitet qidirish</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="search" id="search" 
+                                        placeholder="Universitet nomi..." value="{{ selected_filters.search|default:'' }}">
+                                    <button class="btn btn-outline-primary" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Price Range Slider -->
+                            <div class="mb-4 pb-3 border-bottom">
+                                <label class="form-label fw-bold mb-3">Ta'lim narxi</label>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-primary fw-bold">
+                                        <span id="min-price-display">{{ selected_filters.min_price|default:"860 000" }}</span> UZS
+                                    </span>
+                                    <span class="text-primary fw-bold">
+                                        <span id="max-price-display">{{ selected_filters.max_price|default:"100 000 000" }}</span> UZS
+                                    </span>
+                                </div>
+                                <div class="range-slider mb-4">
+                                    <input type="hidden" name="min_price" id="min-price-hidden" value="{{ selected_filters.min_price|default:"0" }}">
+                                    <input type="hidden" name="max_price" id="max-price-hidden" value="{{ selected_filters.max_price|default:"100000000" }}">
+                                    <div id="price-slider" class="mb-3"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Institution Type Accordion -->
+                            <div class="mb-4 pb-3 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center mb-3" data-bs-toggle="collapse" href="#otmTuriCollapse" role="button">
+                                    <label class="form-label fw-bold mb-0">OTM turi</label>
+                                    <i class="fas fa-chevron-up"></i>
+                                </div>
+                                <div class="collapse" id="otmTuriCollapse">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="institution_category" value="xususiy" id="xususiyOTM" 
+                                            {% if 'xususiy' in selected_filters.institution_category %}checked{% endif %}>
+                                        <label class="form-check-label" for="xususiyOTM">
+                                            Xususiy OTMlar
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="institution_category" value="davlat" id="davlatOTM" 
+                                            {% if 'davlat' in selected_filters.institution_category %}checked{% endif %}>
+                                        <label class="form-check-label" for="davlatOTM">
+                                            Davlat OTMlari
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="institution_category" value="xalqaro" id="xalqaroOTM" 
+                                            {% if 'xalqaro' in selected_filters.institution_category %}checked{% endif %}>
+                                        <label class="form-check-label" for="xalqaroOTM">
+                                            Xalqaro OTMlari
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Location Accordion -->
+                            <div class="mb-4 pb-3 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center mb-3" data-bs-toggle="collapse" href="#manzilCollapse" role="button">
+                                    <label class="form-label fw-bold mb-0">Manzil</label>
+                                    <i class="fas fa-chevron-up"></i>
+                                </div>
+                                <div class="collapse" id="manzilCollapse">
+                                    <div class="filter-scroll" style="max-height: 200px; overflow-y: auto;">
+                                        {% for location in locations %}
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" name="location" value="{{ location.id }}" 
+                                                id="location{{ location.id }}" {% if location.id|stringformat:"i" in selected_filters.location %}checked{% endif %}>
+                                            <label class="form-check-label" for="location{{ location.id }}">
+                                                {{ location.name }}
+                                            </label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Education Type Accordion -->
+                            <div class="mb-4 pb-3 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center mb-3" data-bs-toggle="collapse" href="#talimTuriCollapse" role="button">
+                                    <label class="form-label fw-bold mb-0">Ta'lim turi</label>
+                                    <i class="fas fa-chevron-up"></i>
+                                </div>
+                                <div class="collapse" id="talimTuriCollapse">
+                                    <div class="filter-scroll" style="max-height: 200px; overflow-y: auto;">
+                                        {% for edu_type in education_types %}
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" name="education_type" value="{{ edu_type.id }}" 
+                                                id="eduType{{ edu_type.id }}" {% if edu_type.id|stringformat:"i" in selected_filters.education_type %}checked{% endif %}>
+                                            <label class="form-check-label" for="eduType{{ edu_type.id }}">
+                                                {{ edu_type.name }}
+                                            </label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Language Accordion -->
+                            <div class="pb-3 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center mb-3" data-bs-toggle="collapse" href="#tilCollapse" role="button">
+                                    <label class="form-label fw-bold mb-0">Til</label>
+                                    <i class="fas fa-chevron-up"></i>
+                                </div>
+                                <div class="collapse" id="tilCollapse">
+                                    <div class="filter-scroll" style="max-height: 200px; overflow-y: auto;">
+                                        {% for language in education_languages %}
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" name="education_language" value="{{ language.id }}" 
+                                                id="language{{ language.id }}" {% if language.id|stringformat:"i" in selected_filters.education_language %}checked{% endif %}>
+                                            <label class="form-check-label" for="language{{ language.id }}">
+                                                {{ language.name }}
+                                            </label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Apply Filters Button (Hidden, since we'll auto-submit with JS) -->
+                            <button type="submit" id="apply-filters" class="d-none">Apply Filters</button>
+                        </form>
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- University List -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h2">Universitetlar</h1>
+                <span class="badge bg-primary">{{ page_obj.paginator.count }} ta natija</span>
+            </div>
+            
+            {% if universities %}
+            <div class="university-list">
+                {% for university in universities %}
+                <div class="card mb-4">
+                    <div class="row g-0">
+                        <!-- University Logo Column -->
+                        <div class="col-md-2 d-flex align-items-center justify-content-center p-3 bg-info-subtle">
+                            {% if university.logo %}
+                            <img src="{{ university.logo.url }}" class="img-fluid rounded-circle" alt="{{ university.full_name }}" style="max-height: 80px; max-width: 80px; object-fit: contain;">
+                            {% else %}
+                            <div class="university-logo-placeholder d-flex align-items-center justify-content-center bg-light rounded-circle" style="width: 80px; height: 80px;">
+                                <i class="fas fa-university fa-2x text-secondary"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- University Info Column -->
+                        <div class="col-md-10">
+                            <div class="card-body p-3">
+                                <!-- University Name and Rating -->
+                                <div class="mb-2">
+                                    <h5 class="card-title mb-1">{{ university.full_name }}</h5>
+                                    <div class="d-flex align-items-center mb-1">
+                                        <!-- Rating Stars - Placeholder, replace with actual rating if available -->
+                                        {% comment %} <div class="rating text-warning me-2">
+                                            {% with ''|center:5 as range %}
+                                                {% for _ in range %}
+                                                    {% if forloop.counter <= university.rating|default:0 %}
+                                                    <i class="fas fa-star"></i>
+                                                    {% elif forloop.counter <= university.rating|default:0|add:0.5 %}
+                                                    <i class="fas fa-star-half-alt"></i>
+                                                    {% else %}
+                                                    <i class="far fa-star"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endwith %}
+                                        </div>
+                                        <span class="text-primary me-2">{% firstof university.rating '0.0' %} ({% firstof university.reviews_count '0' %} izoh)</span>
+                                         {% endcomment %}
+                                        <!-- University Type -->
+                                        {% if university.institution_category %}
+                                        <span class="text-primary me-1">{{ university.institution_category.name }}</span>
+                                        {% endif %}
+                                        
+                                        <!-- Location -->
+                                        <span class="text-muted">
+                                            • {% if university.location %}{{ university.location.name }}{% else %}Manzil ko'rsatilmagan{% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <!-- Admission Period -->
+                                    <div class="col-md-6 mb-2">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <i class="far fa-calendar-alt text-muted me-2"></i>
+                                            <span class="text-muted">Qabul muddati</span>
+                                        </div>
+                                        <div>
+                                            {% if university.admission_period %}
+                                                {{ university.admission_period }}
+                                            {% elif university.admission_start_date or university.admission_deadline %}
+                                                {% if university.admission_start_date %}
+                                                    {{ university.admission_start_date|date:"d F Y" }}
+                                                {% endif %}
+                                                {% if university.admission_start_date and university.admission_deadline %} - {% endif %}
+                                                {% if university.admission_deadline %}
+                                                    {{ university.admission_deadline|date:"d F Y" }}
+                                                {% endif %}
+                                            {% else %}
+                                                Ma'lumot mavjud emas
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Tuition Fee Range -->
+                                    <div class="col-md-6 mb-2">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <i class="fas fa-dollar-sign text-muted me-2"></i>
+                                            <span class="text-muted">Kontrakt to'lovi</span>
+                                        </div>
+                                        <div>
+                                            {% if university.tuition_fee_range %}
+                                                {{ university.tuition_fee_range }}
+                                            {% elif university.minimal_tuition_fee %}
+                                                {{ university.minimal_tuition_fee|intcomma }} UZS
+                                                {% if university.maximal_tuition_fee|intcomma %} - {{ university.maximal_tuition_fee|intcomma }} UZS{% endif %}
+                                            {% else %}
+                                                Ma'lumot mavjud emas
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Tags and Grants -->
+                                <div class="mb-3">
+                                    {% if university.has_grant %}
+                                    <div class="d-inline-block me-3">
+                                        <i class="fas fa-graduation-cap text-success me-1"></i>
+                                        <span class="text-success">Grant mavjud</span>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if university.has_scholarship %}
+                                    <div class="d-inline-block me-3">
+                                        <i class="fas fa-award text-primary me-1"></i>
+                                        <span class="text-primary">Stipendiya mavjud</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Details Button -->
+                                <div class="text-end">
+                                    <a href="{% url 'universities:university_detail' university.slug %}" class="btn btn-primary">
+                                        Batafsil
+                                        <i class="fas fa-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Pagination -->
+                {% if is_paginated %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page=1" aria-label="First">
+                                <span aria-hidden="true">&laquo;&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="First">
+                                <span aria-hidden="true">&laquo;&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for i in paginator.page_range %}
+                            {% if i >= page_obj.number|add:"-2" and i <= page_obj.number|add:"2" %}
+                            <li class="page-item {% if i == page_obj.number %}active{% endif %}">
+                                <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ i }}">{{ i }}</a>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ paginator.num_pages }}" aria-label="Last">
+                                <span aria-hidden="true">&raquo;&raquo;</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Last">
+                                <span aria-hidden="true">&raquo;&raquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+                
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i> Hech qanday universitet topilmadi. Iltimos, boshqa mezonlarni tanlang.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.css">
+<style>
+.noUi-connect {
+  background: #0d6efd;
+}
+.noUi-horizontal {
+  height: 10px;
+}
+.noUi-horizontal .noUi-handle {
+  width: 20px;
+  height: 20px;
+  right: -10px;
+  top: -6px;
+  border-radius: 50%;
+  background-color: #0d6efd;
+  box-shadow: none;
+  border: 2px solid #ffffff;
+  cursor: pointer;
+}
+.noUi-handle:before, .noUi-handle:after {
+  display: none;
+}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Price Range Slider
+    const minPriceInput = document.getElementById('min-price-hidden');
+    const maxPriceInput = document.getElementById('max-price-hidden');
+    const minPriceDisplay = document.getElementById('min-price-display');
+    const maxPriceDisplay = document.getElementById('max-price-display');
+    const priceSlider = document.getElementById('price-slider');
+    
+    function formatNumber(num) {
+        return new Intl.NumberFormat('uz-UZ').format(num);
+    }
+    
+    // Initialize noUiSlider
+    if (priceSlider) {
+        try {
+            // Check if slider already initialized
+            if (priceSlider.noUiSlider) {
+                priceSlider.noUiSlider.destroy();
+            }
+            
+            const minPrice = parseInt(minPriceInput.value) || 0;
+            const maxPrice = parseInt(maxPriceInput.value) || 100000000;
+            
+            // Update displays with initial values
+            minPriceDisplay.textContent = formatNumber(minPrice);
+            maxPriceDisplay.textContent = formatNumber(maxPrice);
+            
+            
+            noUiSlider.create(priceSlider, {
+                start: [minPrice, maxPrice],
+                connect: true,
+                step: 100000,
+                range: {
+                    'min': 0,
+                    'max': 100000000
+                },
+                format: {
+                    to: function (value) {
+                        return Math.round(value);
+                    },
+                    from: function (value) {
+                        return Math.round(value);
+                    }
+                }
+            });
+            
+            // Update hidden inputs and display on slider change
+            priceSlider.noUiSlider.on('update', function(values, handle) {
+                const value = parseInt(values[handle]);
+                if (handle === 0) {
+                    minPriceInput.value = value;
+                    minPriceDisplay.textContent = formatNumber(value);
+                } else {
+                    maxPriceInput.value = value;
+                    maxPriceDisplay.textContent = formatNumber(value);
+                }
+            });
+            
+            // Submit form when slider stops being dragged
+            priceSlider.noUiSlider.on('end', function() {
+                document.getElementById('filters-form').submit();
+            });
+        } catch (error) {
+            console.error("Error initializing slider:", error);
+            // Fallback to regular inputs if slider fails
+            const fallbackContainer = document.createElement('div');
+            fallbackContainer.className = 'd-flex gap-2';
+            fallbackContainer.innerHTML = `
+                <input type="number" class="form-control" name="min_price" min="0" max="100000000" step="100000" value="${minPriceInput.value || 0}">
+                <span class="align-self-center">-</span>
+                <input type="number" class="form-control" name="max_price" min="0" max="100000000" step="100000" value="${maxPriceInput.value || 100000000}">
+            `;
+            priceSlider.parentNode.replaceChild(fallbackContainer, priceSlider);
+        }
+    }
+    
+    // Toggle accordion icons
+    const accordionToggles = document.querySelectorAll('[data-bs-toggle="collapse"]');
+    accordionToggles.forEach(function(toggle) {
+        toggle.addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-chevron-up')) {
+                icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+            } else {
+                icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+            }
+        });
+    });
+    
+    // Auto-submit form on checkbox changes
+    const filterCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+    filterCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            document.getElementById('filters-form').submit();
+        });
+    });
+});
+</script>
+{% endblock %}

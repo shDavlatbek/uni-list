@@ -89,6 +89,14 @@
       ]
     },
     {
+      "name": "degree",
+      "label": "Daraja",
+      "value": [
+        { "name": "Bakalavr", "id": "1" },
+        { "name": "Magistr", "id": "2" }
+      ]
+    },
+    {
       "name": "edu_lang",
       "label": "Til",
       "value": [

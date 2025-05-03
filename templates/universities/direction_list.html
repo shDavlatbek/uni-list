@@ -1,0 +1,352 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Ta'lim Yo'nalishlari - Ro'yxat{% endblock %}
+
+{% block content %}
+<main class="container py-4">
+    <div class="row">
+        <!-- Filters Sidebar -->
+        <div class="col-lg-3">
+            <div class="mb-4">
+                <h5 class="mb-3">Jami {{ page_obj.paginator.count }} ta natija ko'rsatilmoqda</h5>
+                
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold m-0">Filter</h5>
+                            <a href="{% url 'universities:direction_list' %}" class="btn btn-outline-danger rounded-pill px-4">Tozalash</a>
+                        </div>
+                        
+                        <form action="{% url 'universities:direction_list' %}" method="get" id="filters-form">
+                            <!-- Search Input -->
+                            <div class="mb-4 pb-3 border-bottom">
+                                <label for="search" class="form-label fw-bold mb-2">Qidirish</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="search" id="search" 
+                                        placeholder="Yo'nalish nomi..." value="{{ selected_filters.search|default:'' }}">
+                                    <button class="btn btn-outline-primary" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- University Accordion -->
+                            <div class="mb-4 pb-3 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center mb-3" data-bs-toggle="collapse" href="#universityCollapse" role="button">
+                                    <label class="form-label fw-bold mb-0">Universitet</label>
+                                    <i class="fas fa-chevron-up"></i>
+                                </div>
+                                <div class="collapse" id="universityCollapse">
+                                    <div class="filter-scroll" style="max-height: 200px; overflow-y: auto;">
+                                        {% for uni in universities %}
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" name="university" value="{{ uni.id }}" 
+                                                id="uni{{ uni.id }}" {% if uni.id|stringformat:"i" in selected_filters.university %}checked{% endif %}>
+                                            <label class="form-check-label" for="uni{{ uni.id }}">
+                                                {{ uni.full_name }}
+                                            </label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Category Accordion -->
+                            <div class="mb-4 pb-3 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center mb-3" data-bs-toggle="collapse" href="#categoryCollapse" role="button">
+                                    <label class="form-label fw-bold mb-0">Ta'lim yo'nalishi</label>
+                                    <i class="fas fa-chevron-up"></i>
+                                </div>
+                                <div class="collapse" id="categoryCollapse">
+                                    <div class="filter-scroll" style="max-height: 200px; overflow-y: auto;">
+                                        {% for category in categories %}
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" name="category" value="{{ category.id }}" 
+                                                id="category{{ category.id }}" {% if category.id|stringformat:"i" in selected_filters.category %}checked{% endif %}>
+                                            <label class="form-check-label" for="category{{ category.id }}">
+                                                {{ category.name }}
+                                            </label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Education Type Accordion -->
+                            <div class="mb-4 pb-3 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center mb-3" data-bs-toggle="collapse" href="#eduTypeCollapse" role="button">
+                                    <label class="form-label fw-bold mb-0">Ta'lim turi</label>
+                                    <i class="fas fa-chevron-up"></i>
+                                </div>
+                                <div class="collapse" id="eduTypeCollapse">
+                                    <div class="filter-scroll" style="max-height: 200px; overflow-y: auto;">
+                                        {% for edu_type in education_types %}
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" name="education_type" value="{{ edu_type.id }}" 
+                                                id="eduType{{ edu_type.id }}" {% if edu_type.id|stringformat:"i" in selected_filters.education_type %}checked{% endif %}>
+                                            <label class="form-check-label" for="eduType{{ edu_type.id }}">
+                                                {{ edu_type.name }}
+                                            </label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Education Language Accordion -->
+                            <div class="mb-4 pb-3 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center mb-3" data-bs-toggle="collapse" href="#eduLangCollapse" role="button">
+                                    <label class="form-label fw-bold mb-0">Ta'lim tili</label>
+                                    <i class="fas fa-chevron-up"></i>
+                                </div>
+                                <div class="collapse" id="eduLangCollapse">
+                                    <div class="filter-scroll" style="max-height: 200px; overflow-y: auto;">
+                                        {% for language in education_languages %}
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" name="education_language" value="{{ language.id }}" 
+                                                id="eduLang{{ language.id }}" {% if language.id|stringformat:"i" in selected_filters.education_language %}checked{% endif %}>
+                                            <label class="form-check-label" for="eduLang{{ language.id }}">
+                                                {{ language.name }}
+                                            </label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Degree Accordion -->
+                            <div class="mb-4 pb-3 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center mb-3" data-bs-toggle="collapse" href="#degreeCollapse" role="button">
+                                    <label class="form-label fw-bold mb-0">Daraja</label>
+                                    <i class="fas fa-chevron-up"></i>
+                                </div>
+                                <div class="collapse" id="degreeCollapse">
+                                    <div class="filter-scroll" style="max-height: 200px; overflow-y: auto;">
+                                        {% for degree in degrees %}
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" name="degree" value="{{ degree.id }}" 
+                                                id="degree{{ degree.id }}" {% if degree.id|stringformat:"i" in selected_filters.degree %}checked{% endif %}>
+                                            <label class="form-check-label" for="degree{{ degree.id }}">
+                                                {{ degree.name }}
+                                            </label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Admission Status -->
+                            <div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="admission_status" value="open" 
+                                        id="openAdmission" {% if selected_filters.admission_status == 'open' %}checked{% endif %}>
+                                    <label class="form-check-label fw-bold" for="openAdmission">
+                                        Faqat qabul ochiq yo'nalishlar
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Apply Filters Button (Hidden, since we'll auto-submit with JS) -->
+                            <button type="submit" id="apply-filters" class="d-none">Apply Filters</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Direction List -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h2">Ta'lim Yo'nalishlari</h1>
+                <span class="badge bg-primary">{{ page_obj.paginator.count }} ta natija</span>
+            </div>
+            
+            {% if directions %}
+            <div class="direction-list">
+                {% for direction in directions %}
+                
+                <div class="card border-0 mb-4">
+                    <div class="card-body p-4">
+                      {# ────────────────── Top row: logo + fee ────────────────── #}
+                      <div class="row align-items-center mb-3">
+                        <div class="col-12 col-lg-4 d-flex align-items-center">
+                          <div class="bg-white rounded p-2 me-3" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center">
+                            <img src="{{ direction.university.logo.url|default:'#' }}" alt="{{ university.full_name }}" class="img-fluid" />
+                          </div>
+                          <div>
+                            <h3 class="h6 fw-bold mb-1">{{ direction.direction_name }}</h3>
+                            <p class="mb-0 small">{{ university.full_name }}</p>
+                            {% if direction.application_deadline %}
+                            <div class="small text-danger">Qabul tugaydi: {{ direction.application_deadline|date:"d F Y" }}</div>
+                            {% endif %}
+                          </div>
+                        </div>
+        
+                        <div class="col-12 col-lg-8 text-end">
+                          <div class="small mb-1 text-muted"><i class="fas fa-coins me-1"></i> Kontrakt to'lovi:</div>
+                          {% with fee=direction.tuition_fees.first %}
+                          <p class="fw-bold text-primary h5 mb-0">{% if fee %}{{ fee.local_tuition_fee|intcomma }} so'mdan boshlab {% else %}Ma'lumot mavjud emas{% endif %}</p>
+                          {% endwith %} {% if direction.has_stipend %}
+                          <div class="small text-success mt-1"><i class="fas fa-check-circle me-1"></i> Stipendiya mavjud</div>
+                          {% endif %}
+                        </div>
+                      </div>
+        
+                      {# ─────────────────── Info blocks + action button ─────────────────── #}
+                      <div class="row g-3 align-items-start">
+                        {# ── Daraja ── #}
+                        <div class="col-md-4">
+                          <div class="small text-muted mb-1"><i class="fas fa-language me-1"></i> Daraja</div>
+                          <div class="d-flex flex-wrap">
+                            {% for degree in direction.degrees.all %}
+                            <span class="badge bg-light text-dark me-1 mb-1">{{ degree.name }}</span>
+                            {% empty %}
+                            <span class="badge bg-light text-dark mb-1">Ma'lumot mavjud emas</span>
+                            {% endfor %}
+                          </div>
+                        </div>
+        
+                        {# ── Taʼlim tili ── #}
+                        <div class="col-md-4">
+                          <div class="small text-muted mb-1"><i class="fas fa-language me-1"></i> Ta'lim tili</div>
+                          <div class="d-flex flex-wrap">
+                            {% for language in direction.education_languages.all %}
+                            <span class="badge bg-light text-dark me-1 mb-1">{{ language.name }}</span>
+                            {% empty %}
+                            <span class="badge bg-light text-dark mb-1">Ma'lumot mavjud emas</span>
+                            {% endfor %}
+                          </div>
+                        </div>
+        
+                        {# ── Taʼlim shakli ── #}
+                        <div class="col-md-4">
+                          <div class="small text-muted mb-1"><i class="fas fa-book-reader me-1"></i> Ta'lim shakli</div>
+                          <div class="d-flex flex-wrap">
+                            {% for type in direction.education_types.all %}
+                            <span class="badge bg-light text-dark me-1 mb-1">{{ type.name }}</span>
+                            {% empty %}
+                            <span class="badge bg-light text-dark mb-1">Ma'lumot mavjud emas</span>
+                            {% endfor %}
+                          </div>
+                        </div>
+        
+                        {# ── Talablar ── #}
+                        <div class="col-md-4">
+                          <div class="small text-muted mb-1"><i class="fas fa-clipboard-list me-1"></i> Talablar</div>
+                          <p class="small mb-0">{{ direction.requirement|default:"Ma'lumot mavjud emas" }}</p>
+                        </div>
+        
+                        {# ── Action button, always last ── #}
+                        <div class="col-md-auto ms-auto d-flex align-items-start">
+                          <a href="{% url 'universities:direction_detail' direction.direction_slug %}" class="btn btn-primary mt-2 mt-md-0"> Batafsil <i class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                
+                {% endfor %}
+                
+                <!-- Pagination -->
+                {% if is_paginated %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page=1" aria-label="First">
+                                <span aria-hidden="true">&laquo;&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="First">
+                                <span aria-hidden="true">&laquo;&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for i in paginator.page_range %}
+                            {% if i >= page_obj.number|add:"-2" and i <= page_obj.number|add:"2" %}
+                            <li class="page-item {% if i == page_obj.number %}active{% endif %}">
+                                <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ i }}">{{ i }}</a>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ paginator.num_pages }}" aria-label="Last">
+                                <span aria-hidden="true">&raquo;&raquo;</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Last">
+                                <span aria-hidden="true">&raquo;&raquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+                
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i> Hech qanday yo'nalish topilmadi. Iltimos, boshqa mezonlarni tanlang.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.css">
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle accordion icons
+    const accordionToggles = document.querySelectorAll('[data-bs-toggle="collapse"]');
+    accordionToggles.forEach(function(toggle) {
+        toggle.addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-chevron-up')) {
+                icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+            } else {
+                icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+            }
+        });
+    });
+    
+    // Auto-submit form on checkbox changes
+    const filterCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+    filterCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            document.getElementById('filters-form').submit();
+        });
+    });
+});
+</script>
+{% endblock %}

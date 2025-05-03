@@ -1,125 +1,171 @@
+
+{% load static %}
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="Blue_Theme" data-layout="vertical">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Universitetlar Ro'yxati{% endblock %}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Custom styles if needed */
-        body { font-family: 'Inter', sans-serif; } /* Example font */
-        .filter-section { margin-bottom: 1rem; }
-        .filter-section label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
-        .filter-section select,
-        .filter-section input[type="text"],
-        .filter-section input[type="number"] {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #d1d5db; /* gray-300 */
-            border-radius: 0.375rem; /* rounded-md */
-        }
-        .filter-section input[type="checkbox"],
-        .filter-section input[type="radio"] {
-             margin-right: 0.5rem;
-        }
-        .filter-checkbox-group label { display: inline-block; margin-right: 1rem; font-weight: normal;}
-        .pagination a, .pagination span {
-            padding: 0.5rem 0.75rem;
-            margin: 0 0.25rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            text-decoration: none;
-            color: #3b82f6; /* blue-500 */
-        }
-        .pagination .current {
-            background-color: #3b82f6; /* blue-500 */
-            color: white;
-            border-color: #3b82f6;
-        }
-        .pagination a:hover {
-             background-color: #eff6ff; /* blue-50 */
-        }
-    </style>
-    {% block head %}{% endblock %}
-</head>
-<body class="bg-gray-100">
+    <title>{% block title %}Universitetlar{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-    <nav class="bg-white shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex">
-                    <div class="flex-shrink-0 flex items-center">
-                        <span class="text-xl font-bold text-blue-600">UniList</span>
-                    </div>
-                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <a href="{% url 'university_app:university_list' %}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            Universitetlar
-                        </a>
-                        <a href="{% url 'university_app:direction_list' %}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            Yo'nalishlar
-                        </a>
-                    </div>
-                </div>
-                </div>
+    <title>Modernize Bootstrap Admin</title>
+    <link rel="stylesheet" href="{% static 'libs/prismjs/themes/prism-okaidia.min.css' %}">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/aside.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tabler-icons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    {% block extra_head %}
+    {% endblock extra_head %}
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'universities:home' %}">
+                <i class="fas fa-university me-2"></i>Universitetlar
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'universities:home' %}">Bosh sahifa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'university_list' %}active{% endif %}" href="{% url 'universities:university_list' %}">Universitetlar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'direction_list' %}active{% endif %}" href="{% url 'universities:direction_list' %}">Ta'lim yo'nalishlari</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div class="flex flex-col md:flex-row gap-6">
-            <aside class="w-full md:w-1/4 lg:w-1/5">
-                <div class="bg-white p-4 rounded-lg shadow">
-                    <h2 class="text-lg font-semibold mb-4">Filtrlar</h2>
-                    <form method="get" action="">
-                        {% block filters %}
-                        {% endblock %}
-                        <button type="submit" class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-150">
-                            Filtrlash
-                        </button>
-                         <a href="{{ request.path }}" class="mt-2 block text-center w-full bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition duration-150">
-                            Tozalash
-                        </a>
-                    </form>
+    <!-- Main Content -->
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Universitetlar</h5>
+                    <p>O'zbekistondagi oliy ta'lim muassasalari haqida ma'lumot platformasi.</p>
                 </div>
-            </aside>
-
-            <section class="w-full md:w-3/4 lg:w-4/5">
-                {% block content %}
-                {% endblock %}
-
-                {% if page_obj and page_obj.has_other_pages %}
-                <div class="mt-6 flex justify-center pagination">
-                    {% if page_obj.has_previous %}
-                        <a href="?page=1{% for key, value in applied_filters.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&laquo; Boshiga</a>
-                        <a href="?page={{ page_obj.previous_page_number }}{% for key, value in applied_filters.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&lsaquo; Oldingisi</a>
-                    {% endif %}
-
-                    {% for num in page_obj.paginator.page_range %}
-                        {% if page_obj.number == num %}
-                            <span class="current">{{ num }}</span>
-                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                             <a href="?page={{ num }}{% for key, value in applied_filters.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
-                        {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
-                            <span>...</span>
-                        {% endif %}
-                    {% endfor %}
-
-
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}{% for key, value in applied_filters.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Keyingisi &rsaquo;</a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}{% for key, value in applied_filters.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Oxiriga &raquo;</a>
-                    {% endif %}
+                <div class="col-md-4">
+                    <h5>Tezkor havolalar</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'universities:home' %}" class="text-white">Bosh sahifa</a></li>
+                        <li><a href="{% url 'universities:university_list' %}" class="text-white">Universitetlar</a></li>
+                        <li><a href="{% url 'universities:direction_list' %}" class="text-white">Yo'nalishlar</a></li>
+                    </ul>
                 </div>
-                {% endif %}
-            </section>
-        </div>
-    </main>
-
-    <footer class="bg-white mt-10 py-4 border-t">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
-            &copy; {% now "Y" %} University List. Barcha huquqlar himoyalangan.
+                <div class="col-md-4">
+                    <h5>Bog'lanish</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2"></i> info@universitetlar.uz</li>
+                        <li><i class="fas fa-phone me-2"></i> +998 90 123 45 67</li>
+                        <li>
+                            <a href="#" class="text-white me-2"><i class="fab fa-telegram"></i></a>
+                            <a href="#" class="text-white me-2"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="text-white me-2"><i class="fab fa-facebook"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col text-center">
+                    <p class="mb-0">&copy; {% now "Y" %} Universitetlar bazasi.</p>
+                </div>
+            </div>
         </div>
     </footer>
 
-    {% block scripts %}{% endblock %}
+    <div class="theme-toggle d-none"></div>
+    <a href="#" id="get-url" class="d-none"></a>
+
+    <script src="{% static 'js/vendor.min.js' %}"></script>
+    <!-- Import Js Files -->
+    <script src="{% static 'libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'libs/simplebar/dist/simplebar.min.js' %}"></script>
+    <!-- <script src="../assets/js/theme/app.init.js"></script> -->
+    <script>
+        var userSettings = {
+        Layout: "vertical", // vertical | horizontal
+        SidebarType: "full", // full | mini-sidebar
+        BoxedLayout: false, // true | false
+        Direction: "ltr", // ltr | rtl
+        Theme: "light", // light | dark
+        ColorTheme: "Madaniyat_Theme", // Blue_Theme | Aqua_Theme | Purple_Theme | Green_Theme | Cyan_Theme | Orange_Theme
+        cardBorder: false, // true | false
+        };
+    </script>
+
+    <script src="{% static 'js/theme/theme.js' %}"></script>
+    <script src="{% static 'js/theme/app.min.js' %}"></script>
+    <script src="{% static 'js/theme/sidebarmenu.js' %}"></script>
+
+    <!-- solar icons -->
+    <script src="{% static 'npm/iconify-icon%401.0.8/dist/iconify-icon.min.js' %}"></script>
+    <script src="{% static 'libs/prismjs/prism.js' %}"></script>
+    <script src="{% static 'js/widget/ui-card-init.js' %}"></script>
+
+    <!-- Custom JS -->
+    <script src="{% static 'js/custom.js' %}"></script>
+    <script src="{% static 'js/twiker-bs-popover.js' %}"></script>    
+    <script src="{% static 'js/twiker-bs-theme.js' %}"></script>
+    <script>
+        const rootStyles = getComputedStyle(document.documentElement);
+        const reportColors = {
+        submitted: rootStyles.getPropertyValue('--bs-primary').trim(),
+        pending: rootStyles.getPropertyValue('--bs-warning').trim(),
+        approved: rootStyles.getPropertyValue('--bs-success').trim(),
+        rejected: rootStyles.getPropertyValue('--bs-danger').trim()
+        }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          const btn = document.getElementById("shareBtn");
+          if (!btn) return;
+        
+          btn.addEventListener("click", async () => {
+            const url = btn.dataset.shareUrl;
+        
+            /* 1️⃣  Try the native Web Share API (Chrome, Safari, mobile browsers) */
+            if (navigator.share) {
+              try {
+                await navigator.share({ title: document.title, url });
+                return;
+              } catch (err) {
+                /* user cancelled – silently ignore */
+              }
+            }
+        
+            /* 2️⃣  Fallback: copy to clipboard */
+            try {
+              await navigator.clipboard.writeText(url);
+              btn.innerHTML = '<i class="fas fa-check me-2"></i> Nusxa olindi!';
+              setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-share-alt me-2"></i> Ulashish';
+              }, 2000);
+            } catch {
+              /* 3️⃣  Last‑ditch prompt for very old browsers */
+              window.prompt("Havolani nusxa oling", url);
+            }
+          });
+        });
+        </script>
+    {% block extra_js %}
+    {% endblock extra_js %}
 </body>
 </html>

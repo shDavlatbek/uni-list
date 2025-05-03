@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ direction.direction_name }} - {{ direction.university.full_name }}{% endblock %}
+
+{% block content %}
+<div class="container my-2">
+    <!-- Back button -->
+    <div class="d-flex justify-content-between align-items-center my-4">
+
+        {# Back #}
+        <a href="{{ back_url }}"
+           class="btn btn-outline-secondary rounded-pill">
+            <i class="fas fa-arrow-left me-2"></i> Ortga
+        </a>
+      
+        {# Share #}
+        <button type="button"
+                id="shareBtn"
+                class="btn btn-outline-primary rounded-pill"
+                data-share-url="{{ share_url }}">
+            <i class="fas fa-share-alt me-2"></i> Ulashish
+        </button>
+      
+      </div>
+
+    <!-- Direction Header -->
+    <div class="card border-0 mb-4">
+        <div class="card-body p-4">
+            <div class="d-flex align-items-center mb-3">
+                <div class="me-3">
+                    <div class="bg-white rounded p-2" style="width: 64px; height: 64px; display: flex; align-items: center; justify-content: center;">
+                        {% if direction.university.logo %}
+                        <img src="{{ direction.university.logo.url }}" alt="{{ direction.university.full_name }}" class="img-fluid">
+                        {% else %}
+                        <i class="fas fa-university fa-2x text-primary"></i>
+                        {% endif %}
+                    </div>
+                </div>
+                <div>
+                    <h1 class="h4 mb-1 fw-bold">{{ direction.direction_name }}</h1>
+                    <div class="d-flex align-items-center flex-wrap">
+                        <a href="{% url 'universities:university_detail' direction.university.slug %}" class="text-decoration-none text-muted">
+                            {{ direction.university.full_name }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Direction Key Info -->
+            <div class="row g-3 mt-2">
+                <div class="col-md-4">
+                    <div class="d-flex flex-column">
+                        <div class="text-muted me-2 small">
+                            <i class="fas fa-graduation-cap me-1"></i>
+                            Daraja
+                        </div>
+                        <div class="small fw-medium ms-2 mt-2">
+                            {% for degree in direction.degrees.all %}
+                            {{ degree.name }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                            Ma'lumot mavjud emas
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="d-flex flex-column">
+                        <div class="text-muted me-2 small">
+                            <i class="far fa-calendar-alt me-1"></i>
+                            Qabul muddati
+                        </div>
+                        <div class="small fw-medium ms-2 mt-2">
+                            {% if direction.application_start_date and direction.application_deadline %}
+                                {{ direction.application_start_date|date:"d F Y" }} – {{ direction.application_deadline|date:"d F Y" }}
+                            {% elif direction.application_deadline %}
+                                {{ direction.application_deadline|date:"d F Y" }} gacha
+                            {% else %}
+                                Ma'lumot mavjud emas
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="d-flex flex-column">
+                        <div class="text-muted me-2 small">
+                            <i class="fas fa-language me-1"></i>
+                            Ta'lim tili
+                        </div>
+                        <div class="small fw-medium ms-2 mt-2">
+                            {% for language in direction.education_languages.all %}
+                            {{ language.name }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                            Ma'lumot mavjud emas
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- About Section -->
+            <section id="about" class="mb-4">
+                <div class="card border-0">
+                    <div class="card-header">
+                        <h2 class="h5">Yo'nalish haqida</h2>
+                    </div>
+                    <div class="card-body p-4">
+                        
+                        {% if direction.direction_description %}
+                        <div class="mb-4">
+                            {{ direction.direction_description|safe }}
+                        </div>
+                        {% else %}
+                        <p class="text-muted">Ma'lumot mavjud emas</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+
+            <!-- Requirements Section -->
+            <section id="requirements" class="mb-4">
+                <div class="card border-0">
+                    <div class="card-header">
+                        <h2 class="h5">Talablar</h2>
+                    </div>
+                    <div class="card-body p-4">
+                        
+                        {% if direction.requirement %}
+                        <div class="mb-4">
+                            {{ direction.requirement|safe }}
+                        </div>
+                        {% else %}
+                        <p class="text-muted">Ma'lumot mavjud emas</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Quota Section -->
+            <section id="quota" class="mb-4">
+                <div class="card border-0">
+                    <div class="card-header">
+                        <h2 class="h5">Qabul kvotasi</h2>
+                    </div>
+                    <div class="card-body p-4">
+                        {% if direction.quotas.exists %}
+                            {% for quota in direction.quotas.all %}
+                            <div class="mb-3">
+                                <div class="fw-medium">{{ quota.education_type.name }} ta'lim shakli uchun:</div>
+                                <div class="mt-1">{{ quota.quota_count }}</div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">Ma'lumot mavjud emas</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+
+            <!-- Duration Section -->
+            <section id="duration" class="mb-4">
+                <div class="card border-0">
+                    <div class="card-header">
+                        <h2 class="h5">O'qish davomiyligi</h2>
+                    </div>
+                    <div class="card-body p-4">
+                        {% if direction.durations.exists %}
+                            {% for duration in direction.durations.all %}
+                            <div class="mb-3">
+                                <div class="fw-medium">{{ duration.education_type.name }} ta'lim shakli uchun:</div>
+                                <div class="mt-1">{{ duration.duration_years }} yil</div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">Ma'lumot mavjud emas</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tuition Fee Section -->
+            <section id="tuition" class="mb-4">
+                <div class="card border-0">
+                    <div class="card-header">
+                        <h2 class="h5">Ta'lim tili va kontrakt narxlari</h2>
+                    </div>
+                    <div class="card-body p-4">
+                        
+                        <div class="mb-3">
+                            <div class="fw-medium">Ta'lim tili:</div>
+                            <div class="mt-1">
+                                {% for language in direction.education_languages.all %}
+                                {{ language.name }}{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                Ma'lumot mavjud emas
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="fw-medium">Kontrakt narxlari:</div>
+                            
+                            <table class="table table-borderless table-sm mt-2">
+                                <tbody>
+                                    {% for fee in direction.tuition_fees.all %}
+                                    <tr>
+                                        <td>{{ fee.education_type.name }}</td>
+                                        <td class="text-end fw-medium">{{ fee.local_tuition_fee|intcomma|default:"--" }} so'm / yillik</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="2" class="text-muted">Ma'lumot mavjud emas</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Apply Button -->
+            {% if direction.university.web_site %}
+            <div class="text-center mb-4">
+                <a href="{{ direction.university.web_site }}" class="btn btn-primary btn-lg w-100">Hujjat topshirish</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

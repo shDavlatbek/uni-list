@@ -11,6 +11,7 @@ from web.models import (  # adjust the import path to your project
     Category,
     EducationType,
     EducationLanguage,
+    Degree
 )
 
 # -- Helpers ---------------------------------------------------------------
@@ -21,39 +22,35 @@ MODEL_MAP = {
     "category": Category,
     "edu_type": EducationType,
     "edu_lang": EducationLanguage,
+    "degree": Degree
 }
 
 
 def _upsert_objects(model, records):
     """
-    Create new rows or update the name if the id already exists.
-    Uses bulk operations for speed.
+    Create new rows or update existing ones, preserving IDs from the filters.json file.
     """
-    objs = []
-    ids_seen = set()
-
-    # First pull already-existing rows so we can decide what needs updating
-    existing = {obj.pk: obj for obj in model.objects.filter(pk__in=[r["id"] for r in records])}
-
     for rec in records:
-        pk = int(rec["id"])
         name = rec["name"].strip()
-        ids_seen.add(pk)
-
-        if pk in existing:
-            # Only update if the name changed
-            obj = existing[pk]
-            if obj.name != name:
-                obj.name = name
-                obj.save(update_fields=["name"])
+        id_value = rec.get("id")
+        
+        if id_value:
+            # Try to find by ID first
+            try:
+                obj = model.objects.filter(id=id_value).first()
+                if obj:
+                    # If object exists with this ID, update its name
+                    if obj.name != name:
+                        obj.name = name
+                        obj.save()
+                else:
+                    # Create new object with specified ID
+                    obj = model.objects.create(id=id_value, name=name)
+            except Exception as e:
+                print(f"Error processing {name} with ID {id_value}: {e}")
         else:
-            objs.append(model(id=pk, name=name))
-
-    if objs:
-        model.objects.bulk_create(objs, ignore_conflicts=True)
-
-    # Optionally: deactivate / delete rows no longer present
-    # model.objects.exclude(pk__in=ids_seen).delete()
+            # Fallback to get_or_create by name if no ID provided
+            obj, created = model.objects.get_or_create(name=name)
 
 
 # -- Management command ----------------------------------------------------

@@ -1,12 +1,12 @@
 # models.py
 from django.db import models
 from django.utils.text import slugify
+from ckeditor.fields import RichTextField
 
 # --- Filter Models ---
 
 class InstitutionCategory(models.Model):
     """Represents the type of institution (e.g., Private, State, International)."""
-    id = models.PositiveIntegerField(primary_key=True, help_text="ID from filters.json")
     name = models.CharField(max_length=100, unique=True, verbose_name="OTM turi")
 
     def __str__(self):
@@ -18,7 +18,6 @@ class InstitutionCategory(models.Model):
 
 class Location(models.Model):
     """Represents a geographical location (region/city)."""
-    id = models.PositiveIntegerField(primary_key=True, help_text="ID from filters.json")
     name = models.CharField(max_length=100, unique=True, verbose_name="Manzil")
 
     def __str__(self):
@@ -30,7 +29,6 @@ class Location(models.Model):
 
 class Category(models.Model):
     """Represents the category of an educational direction (e.g., IT, Medicine)."""
-    id = models.PositiveIntegerField(primary_key=True, help_text="ID from filters.json")
     name = models.CharField(max_length=200, unique=True, verbose_name="Ta'lim yo'nalishi")
 
     def __str__(self):
@@ -43,7 +41,6 @@ class Category(models.Model):
 
 class EducationType(models.Model):
     """Represents the type of education (e.g., Full-time, Part-time)."""
-    id = models.PositiveIntegerField(primary_key=True, help_text="ID from filters.json")
     name = models.CharField(max_length=100, unique=True, verbose_name="Ta'lim turi")
 
     def __str__(self):
@@ -55,7 +52,6 @@ class EducationType(models.Model):
 
 class EducationLanguage(models.Model):
     """Represents the language of instruction."""
-    id = models.PositiveIntegerField(primary_key=True, help_text="ID from filters.json")
     name = models.CharField(max_length=100, unique=True, verbose_name="Ta'lim tili")
 
     def __str__(self):
@@ -67,10 +63,7 @@ class EducationLanguage(models.Model):
 
 class Degree(models.Model):
     """Represents the degree level (e.g., Bachelor, Master)."""
-    # Assuming degree IDs are consistent across universities in the JSON
-    id = models.PositiveIntegerField(primary_key=True)
-    # We need a name field, inferring from direction-keys sample
-    name = models.CharField(max_length=100, unique=True, default="Noma'lum Daraja", verbose_name="Daraja")
+    name = models.CharField(max_length=100, unique=True, verbose_name="Daraja")
 
     def __str__(self):
         return self.name
@@ -78,43 +71,72 @@ class Degree(models.Model):
     class Meta:
         verbose_name = "Daraja"
         verbose_name_plural = "Darajalar"
+ 
+ 
+class TuitionFee(models.Model):
+    """
+    Fee for ONE education‑type inside ONE direction.
+    """
+    direction = models.ForeignKey(
+        'Direction', on_delete=models.CASCADE, related_name="tuition_fees"
+    )
+    education_type = models.ForeignKey(EducationType, on_delete=models.CASCADE, verbose_name="Ta'lim turi")
+    academic_year = models.CharField(max_length=9, blank=True, null=True, verbose_name="O'quv yili")  # e.g. "2024/25"
+    local_tuition_fee = models.PositiveIntegerField(blank=True, null=True, verbose_name="Mahalliy kontrakt narxi")
+    international_tuition_fee = models.PositiveIntegerField(blank=True, null=True, verbose_name="Xalqaro kontrakt narxi")
+
+    class Meta:
+        unique_together = ("direction", "education_type")   # <─ one row per combo
+        verbose_name = "Kontrakt narxi"
+        verbose_name_plural = "Kontrakt narxlari"
+        ordering = ['local_tuition_fee']
+        
+    def __str__(self):
+        return f"{self.direction} · {self.education_type} · {self.local_tuition_fee}"
+ 
+ 
+class Gallery(models.Model):
+    """Represents a gallery of images."""
+    university = models.ForeignKey(
+        'University',
+        on_delete=models.CASCADE,
+        related_name="gallery_items"
+    )
+    image = models.FileField(upload_to='gallery_images/', blank=True, null=True, help_text="Gallery image")
+    link = models.URLField(max_length=255, blank=True, null=True, verbose_name="Link")
+
+    def __str__(self):
+        return f"Gallery {self.pk}"
 
 # --- Main Models ---
 
 class University(models.Model):
     """Represents a university."""
-    id = models.PositiveIntegerField(primary_key=True, help_text="Original ID from JSON")
     full_name = models.CharField(max_length=255, verbose_name="To'liq nomi")
     slug = models.SlugField(max_length=255, unique=True, blank=True, help_text="URL uchun qisqa nom")
-    logo = models.CharField(max_length=255, blank=True, null=True, help_text="Logo fayl yo'li") # Assuming path stored as string
-    description = models.TextField(blank=True, null=True, verbose_name="Tavsif")
-    about_grant = models.TextField(blank=True, null=True, verbose_name="Grant haqida")
+    logo = models.FileField(upload_to='university_logos/', blank=True, null=True, help_text="Logo fayl yo'li") # Assuming path stored as string
+    description = RichTextField(blank=True, null=True, verbose_name="Tavsif")
+    about_grant = RichTextField(blank=True, null=True, verbose_name="Grant haqida")
     address = models.CharField(max_length=255, blank=True, null=True, verbose_name="Manzil")
-    founded_year = models.CharField(max_length=50, blank=True, null=True, verbose_name="Tashkil etilgan yili") # Store as Char due to format
-    students_count = models.PositiveIntegerField(blank=True, null=True, verbose_name="Talabalar soni")
-    current_quota = models.PositiveIntegerField(blank=True, null=True, verbose_name="Joriy kvota")
     has_accomodation = models.BooleanField(default=False, verbose_name="Yotoqxona mavjudmi?")
-    has_grant = models.BooleanField(default=False, blank=True, null=True, verbose_name="Grant mavjudmi?")
+    has_grant = models.BooleanField(default=False, verbose_name="Grant mavjudmi?")
     admission_phone = models.CharField(max_length=100, blank=True, null=True, verbose_name="Qabul telefoni")
+    license_file = models.FileField(upload_to='license_files/', blank=True, null=True, help_text="License file")
     web_site = models.URLField(max_length=255, blank=True, null=True, verbose_name="Veb-sayt")
     instagram_username = models.CharField(max_length=255, blank=True, null=True, verbose_name="Instagram")
     telegram_username = models.CharField(max_length=255, blank=True, null=True, verbose_name="Telegram")
     facebook_username = models.CharField(max_length=255, blank=True, null=True, verbose_name="Facebook")
     youtube_username = models.CharField(max_length=255, blank=True, null=True, verbose_name="YouTube")
     support_email = models.EmailField(max_length=255, blank=True, null=True, verbose_name="Qo'llab-quvvatlash Emaili")
-    admission_start_date = models.CharField(max_length=50, blank=True, null=True, verbose_name="Qabul boshlanish sanasi") # Store as Char due to format
-    admission_deadline = models.CharField(max_length=50, blank=True, null=True, verbose_name="Qabul tugash sanasi") # Store as Char due to format
+    admission_start_date = models.DateTimeField(blank=True, null=True, verbose_name="Qabul boshlanish sanasi") # Store as Char due to format
+    admission_deadline = models.DateTimeField(blank=True, null=True, verbose_name="Qabul tugash sanasi") # Store as Char due to format
     minimal_tuition_fee = models.PositiveIntegerField(blank=True, null=True, verbose_name="Minimal kontrakt narxi")
     maximal_tuition_fee = models.PositiveIntegerField(blank=True, null=True, verbose_name="Maksimal kontrakt narxi")
     latitude = models.CharField(max_length=50, blank=True, null=True, verbose_name="Kenglik")
     longitude = models.CharField(max_length=50, blank=True, null=True, verbose_name="Uzunlik")
     is_open_for_admission = models.BooleanField(default=False, verbose_name="Qabul ochiqmi?")
-    rating = models.CharField(max_length=10, blank=True, null=True, verbose_name="Reyting")
-    rating_total_pupil = models.PositiveIntegerField(blank=True, null=True, verbose_name="Reytingdagi o'quvchilar soni")
-    mtdt_title = models.CharField(max_length=255, blank=True, null=True, verbose_name="Meta Sarlavha")
-    mtdt_description = models.TextField(blank=True, null=True, verbose_name="Meta Tavsif")
-    direction_count = models.PositiveIntegerField(blank=True, null=True, verbose_name="Yo'nalishlar soni")
-
+    
+    
     # --- Relationships ---
     institution_category = models.ForeignKey(
         InstitutionCategory,
@@ -167,7 +189,6 @@ class University(models.Model):
 
 class Direction(models.Model):
     """Represents an educational direction within a university."""
-    direction_id = models.PositiveIntegerField(primary_key=True, help_text="Original direction_id from JSON")
     university = models.ForeignKey(
         University,
         on_delete=models.CASCADE, # If uni is deleted, delete its directions
@@ -182,16 +203,15 @@ class Direction(models.Model):
     )
     direction_name = models.CharField(max_length=255, verbose_name="Yo'nalish nomi")
     direction_slug = models.SlugField(max_length=255, unique=True, blank=True, help_text="URL uchun qisqa nom")
-    direction_description = models.TextField(blank=True, null=True, verbose_name="Yo'nalish tavsifi")
-    requirement = models.TextField(blank=True, null=True, verbose_name="Talablar")
+    direction_description = RichTextField(blank=True, null=True, verbose_name="Yo'nalish tavsifi")
+    requirement = RichTextField(blank=True, null=True, verbose_name="Talablar")
     first_subject = models.CharField(max_length=100, blank=True, null=True, verbose_name="Birinchi fan")
     second_subject = models.CharField(max_length=100, blank=True, null=True, verbose_name="Ikkinchi fan")
     has_mandatory_subjects = models.BooleanField(default=False, blank=True, null=True, verbose_name="Majburiy fanlar bormi?") # Assuming boolean based on 'true'/'false' string
     has_stipend = models.BooleanField(default=False, verbose_name="Stipendiya mavjudmi?")
     is_open_for_admission = models.BooleanField(default=False, verbose_name="Qabul ochiqmi?")
-    application_start_date = models.CharField(max_length=50, blank=True, null=True, verbose_name="Ariza topshirish boshlanish sanasi") # Store as Char due to format
-    application_deadline = models.CharField(max_length=50, blank=True, null=True, verbose_name="Ariza topshirish tugash sanasi") # Store as Char due to format
-    status = models.CharField(max_length=50, blank=True, null=True, default='active', verbose_name="Holati")
+    application_start_date = models.DateTimeField(blank=True, null=True, verbose_name="Ariza topshirish boshlanish sanasi") # Store as Char due to format
+    application_deadline = models.DateTimeField(blank=True, null=True, verbose_name="Ariza topshirish tugash sanasi") # Store as Char due to format
     is_promoted = models.IntegerField(default=0, blank=True, null=True, verbose_name="Targ'ib qilinganmi?") # Assuming integer
 
     # --- Relationships ---

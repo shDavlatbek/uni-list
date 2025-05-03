@@ -1,0 +1,281 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Universitetlar - Bosh Sahifa{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        padding: 80px 0;
+        margin-top: -16px;
+        margin-bottom: 40px;
+    }
+    
+    
+    .search-section {
+        background: linear-gradient(135deg, #0d47a1, #42a5f5);
+        margin: -40px 0 40px 0;
+        border-radius: 0;
+        padding: 60px 0;
+    }
+    
+    .search-box {
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        border-radius: 50px;
+        overflow: hidden;
+    }
+    
+    .search-input {
+        border: none;
+        padding: 15px 25px;
+        font-size: 18px;
+    }
+    
+    .search-button {
+        border-radius: 0 50px 50px 0;
+        padding: 15px 30px;
+        background: var(--bs-primary);
+        border-color: var(--bs-primary);
+        color: #fff;
+        font-weight: 600;
+    }
+    
+    .search-button:hover {
+        background: rgba(var(--bs-primary-rgb), 0.8);
+        border-color: rgba(var(--bs-primary-rgb), 0.8);
+        color: #f8f9fa;
+    }
+    
+    .section-title {
+        position: relative;
+        font-weight: 700;
+        margin-bottom: 40px;
+    }
+    
+    .section-title:after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 4px;
+        background: #ff6d00;
+        top: 70%;
+        margin: 20px auto 0;
+    }
+    
+    .university-card {
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+    
+    .university-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    
+    .university-logo-container {
+        height: 140px;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .stats-section {
+        background: linear-gradient(rgba(25,118,210,0.9), rgba(25,118,210,0.9)), url('{% static "images/backgrounds/university-bg.jpg" %}') no-repeat center center;
+        background-size: cover;
+        background-attachment: fixed;
+        padding: 80px 0;
+        color: white;
+        border-radius: 0;
+        margin: 60px 0;
+    }
+    
+    .stats-number {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 0;
+        color: #fff;
+    }
+    
+    .stats-label {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        color: #fff;
+    }
+    
+    .stats-icon {
+        color: #ff6d00;
+    }
+    
+    .about-section {
+        padding: 80px 0;
+        background: #f8f9fa;
+    }
+    
+    .feature-list li {
+        padding: 10px 0;
+    }
+    
+    .feature-icon {
+        background: #e3f2fd;
+        padding: 10px;
+        border-radius: 50%;
+        color: #1976d2;
+        margin-right: 15px;
+    }
+    
+    .cta-btn {
+        padding: 12px 30px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">O'zbekiston universitletlari bazasi</h1>
+                <p class="lead mb-4">O'zbekistondagi oliy ta'lim muassasalari haqida to'liq ma'lumot, yo'nalishlar va qabul jarayoni haqida ma'lumot olish imkoniyati.</p>
+                <div class="mt-4">
+                    <a href="{% url 'universities:university_list' %}" class="btn btn-primary btn-lg me-2 cta-btn">Universitetlar</a>
+                    <a href="{% url 'universities:direction_list' %}" class="btn btn-outline-primary btn-lg cta-btn">Yo'nalishlar</a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="{% static 'images/hero-image.png' %}" alt="Universities" class="img-fluid rounded hero-image" style="max-height: 400px;" onerror="this.src='https://placehold.co/600x400?text=Universities'">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Search Section -->
+<section class="search-section">
+    <div class="container">
+        <h2 class="text-center text-white mb-4 fw-bold">Universitet yoki yo'nalish qidirish</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <form action="{% url 'universities:university_list' %}" method="get">
+                    <div class="input-group search-box">
+                        <input type="text" name="search" class="form-control bg-white text-dark search-input" placeholder="Universitet yoki yo'nalish nomini kiriting...">
+                        <button class="btn btn-light search-button" type="submit">
+                            <i class="fas fa-search me-2"></i> Qidirish
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Universities Section -->
+<section class="featured-universities my-5">
+    <div class="container">
+        <h2 class="section-title text-center">Mashhur universitetlar</h2>
+        <div class="row">
+            {% for university in featured_universities %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 university-card">
+                    <div class="university-logo-container">
+                        {% if university.logo %}
+                        <img src="{{ university.logo.url }}" alt="{{ university.full_name }}" style="max-height: 100px; max-width: 80%; object-fit: contain;">
+                        {% else %}
+                        <div class="university-logo-placeholder d-flex align-items-center justify-content-center">
+                            <i class="fas fa-university fa-3x text-secondary"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">{{ university.full_name }}</h5>
+                        <p class="card-text">
+                            <i class="fas fa-map-marker-alt text-primary me-1"></i> 
+                            {% if university.location %}{{ university.location.name }}{% else %}Manzil ko'rsatilmagan{% endif %}
+                        </p>
+                        <p class="card-text small text-muted">
+                            {% if university.description %}
+                            {{ university.description|striptags|safe|truncatechars:100 }}
+                            {% else %}
+                            Ma'lumot mavjud emas
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="card-footer bg-white border-top-0">
+                        <a href="{% url 'universities:university_detail' university.slug %}" class="btn btn-primary w-100 cta-btn">Batafsil <i class="fas fa-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p>Hech qanday universitet topilmadi.</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-5">
+            <a href="{% url 'universities:university_list' %}" class="btn btn-outline-primary btn-lg cta-btn">Barcha universitetlar</a>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <h2 class="section-title text-center text-white">Bizning raqamlarimiz</h2>
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="stats-item">
+                    <div class="stats-icon mb-3">
+                        <i class="fas fa-university fa-3x"></i>
+                    </div>
+                    <h3 class="stats-number">{{ university_count }}</h3>
+                    <p class="stats-label">Universitetlar</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="stats-item">
+                    <div class="stats-icon mb-3">
+                        <i class="fas fa-graduation-cap fa-3x"></i>
+                    </div>
+                    <h3 class="stats-number">{{ direction_count }}</h3>
+                    <p class="stats-label">Yo'nalishlar</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="stats-item">
+                    <div class="stats-icon mb-3">
+                        <i class="fas fa-map-marker-alt fa-3x"></i>
+                    </div>
+                    <h3 class="stats-number">{{ location_count }}</h3>
+                    <p class="stats-label">Manzillar</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="about-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
+                <img src="{% static 'images/about-image.png' %}" alt="About" class="img-fluid rounded shadow" style="max-height: 400px;" onerror="this.src='https://placehold.co/600x400?text=About+Us'">
+            </div>
+            <div class="col-lg-6 order-lg-1">
+                <h2 class="section-title mb-4">Platforma haqida</h2>
+                <p class="lead">Universitetlar platformasi O'zbekistondagi oliy ta'lim muassasalari haqida eng to'liq ma'lumotlar bazasini taqdim etadi. Bizning platforma orqali siz:</p>
+                <ul class="list-unstyled feature-list">
+                    <li><i class="fas fa-check-circle feature-icon"></i> Barcha universitetlar haqida to'liq ma'lumot olishingiz</li>
+                    <li><i class="fas fa-check-circle feature-icon"></i> Ta'lim yo'nalishlari bo'yicha qidirish imkoniyatidan foydalanishingiz</li>
+                    <li><i class="fas fa-check-circle feature-icon"></i> Qabul jarayoni haqida ma'lumot olishingiz</li>
+                    <li><i class="fas fa-check-circle feature-icon"></i> Kontrakt narxlari va stipendiyalar haqida bilib olishingiz mumkin</li>
+                </ul>
+                <p class="mt-4">Bizning maqsadimiz abituriyentlarga to'g'ri ta'lim muassasasi va yo'nalishni tanlashda yordam berishdir.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
