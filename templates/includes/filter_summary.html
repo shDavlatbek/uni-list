@@ -1,0 +1,15 @@
+{% if active_filters %}
+<div class="mb-4">
+    <h6 class="mb-3">Faol filtrlar</h6>
+    <div class="d-flex flex-wrap gap-2">
+        {% for filter in active_filters %}
+        <div class="badge bg-primary-subtle text-primary-emphasis d-flex align-items-center">
+            <span class="me-2">{{ filter.title }}: {{ filter.name }}</span>
+            <a href="{{ filter.remove_url }}" class="text-decoration-none text-primary-emphasis" title="O'chirish">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %} 

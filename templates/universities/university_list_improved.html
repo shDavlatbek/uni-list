@@ -1,0 +1,532 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load filter_tags %}
+
+{% block title %}Universitetlar - Ro'yxat{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.css">
+<style>
+.noUi-connect {
+  background: #0d6efd;
+}
+.noUi-horizontal {
+  height: 10px;
+}
+.noUi-horizontal .noUi-handle {
+  width: 20px;
+  height: 20px;
+  right: -10px;
+  top: -6px;
+  border-radius: 50%;
+  background-color: #0d6efd;
+  box-shadow: none;
+  border: 2px solid #ffffff;
+  cursor: pointer;
+}
+.noUi-handle:before, .noUi-handle:after {
+  display: none;
+}
+
+.filter-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.filter-checkbox:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+.university-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.university-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="container py-4">
+    <div class="row">
+        <!-- Filters Sidebar -->
+        <div class="col-lg-3">
+            <div class="mb-4">
+                <h5 class="mb-3">{% filter_count page_obj.paginator.count %}</h5>
+                
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold m-0">
+                                Filter
+                                {% active_filters_count as filters_count %}
+                                {% if filters_count > 0 %}
+                                <span class="badge bg-primary ms-2">{{ filters_count }}</span>
+                                {% endif %}
+                            </h5>
+                            <a href="{% clear_filters_url %}" class="btn btn-outline-danger rounded-pill px-4">
+                                <i class="fas fa-eraser me-1"></i>Tozalash
+                            </a>
+                        </div>
+                        
+                        <!-- Active Filters Summary -->
+                        {% filter_summary %}
+                        
+                        <form action="{% url 'universities:university_list' %}" method="get" id="filters-form">
+                            <!-- Search Input -->
+                            {% search_filter placeholder="Universitet nomi..." value=selected_filters.search %}
+                            
+                            <!-- Price Range Slider -->
+                            {% price_range_filter selected_min=selected_filters.min_price selected_max=selected_filters.max_price %}
+                            
+                            <!-- Institution Type -->
+                            <div class="mb-4 pb-3 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center mb-3" data-bs-toggle="collapse" href="#otmTuriCollapse" role="button">
+                                    <label class="form-label fw-bold mb-0">
+                                        <i class="fas fa-building me-2"></i>OTM turi
+                                    </label>
+                                    <i class="fas fa-chevron-up"></i>
+                                </div>
+                                <div class="collapse show" id="otmTuriCollapse">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input filter-checkbox" type="checkbox" name="institution_category" value="xususiy" id="xususiyOTM" 
+                                            {% if 'xususiy' in selected_filters.institution_category %}checked{% endif %}>
+                                        <label class="form-check-label" for="xususiyOTM">
+                                            Xususiy OTMlar
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input filter-checkbox" type="checkbox" name="institution_category" value="davlat" id="davlatOTM" 
+                                            {% if 'davlat' in selected_filters.institution_category %}checked{% endif %}>
+                                        <label class="form-check-label" for="davlatOTM">
+                                            Davlat OTMlari
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input filter-checkbox" type="checkbox" name="institution_category" value="xalqaro" id="xalqaroOTM" 
+                                            {% if 'xalqaro' in selected_filters.institution_category %}checked{% endif %}>
+                                        <label class="form-check-label" for="xalqaroOTM">
+                                            Xalqaro OTMlari
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Location Filter -->
+                            {% checkbox_filter "Manzil" "location" locations selected_filters.location "fas fa-map-marker-alt" %}
+                            
+                            <!-- Education Type Filter -->
+                            {% checkbox_filter "Ta'lim turi" "education_type" education_types selected_filters.education_type "fas fa-graduation-cap" %}
+                            
+                            <!-- Language Filter -->
+                            {% checkbox_filter "Ta'lim tili" "education_language" education_languages selected_filters.education_language "fas fa-language" %}
+                            
+                            <!-- Degree Filter -->
+                            {% checkbox_filter "Daraja" "degree" degrees selected_filters.degree "fas fa-award" %}
+                            
+                            <!-- Admission Status -->
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input filter-checkbox" type="checkbox" name="admission_status" value="open" 
+                                        id="openAdmission" {% if selected_filters.admission_status == 'open' %}checked{% endif %}>
+                                    <label class="form-check-label fw-bold" for="openAdmission">
+                                        <i class="fas fa-door-open me-2"></i>Faqat qabul ochiq universitetlar
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Hidden submit button -->
+                            <button type="submit" id="apply-filters" class="d-none">Apply Filters</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- University List -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h2 mb-1">Universitetlar</h1>
+                    <p class="text-muted mb-0">Eng yaxshi ta'lim muassasalarini toping</p>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="badge bg-primary fs-6">{{ page_obj.paginator.count }} ta natija</span>
+                    <!-- Sort dropdown could be added here -->
+                </div>
+            </div>
+            
+            <!-- Loading indicator -->
+            <div id="loading-indicator" class="text-center py-5 d-none">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Yuklanmoqda...</span>
+                </div>
+                <p class="mt-2 text-muted">Natijalar yuklanmoqda...</p>
+            </div>
+            
+            <!-- Results container -->
+            <div id="results-container">
+                {% if universities %}
+                <div class="university-list">
+                    {% for university in universities %}
+                    <div class="card mb-4 university-card border-0 shadow-sm">
+                        <div class="row g-0">
+                            <!-- University Logo Column -->
+                            <div class="col-md-2 d-flex align-items-center justify-content-center p-3 bg-light">
+                                {% if university.logo %}
+                                <img src="{{ university.logo.url }}" class="img-fluid rounded-circle" alt="{{ university.full_name }}" style="max-height: 80px; max-width: 80px; object-fit: contain;">
+                                {% else %}
+                                <div class="university-logo-placeholder d-flex align-items-center justify-content-center bg-white rounded-circle border" style="width: 80px; height: 80px;">
+                                    <i class="fas fa-university fa-2x text-primary"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- University Info Column -->
+                            <div class="col-md-10">
+                                <div class="card-body p-4">
+                                    <!-- University Name and Status -->
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h5 class="card-title mb-2">{{ university.full_name }}</h5>
+                                                <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
+                                                    {% if university.institution_category %}
+                                                    <span class="badge bg-primary-subtle text-primary">{{ university.institution_category.name }}</span>
+                                                    {% endif %}
+                                                    
+                                                    {% if university.location %}
+                                                    <span class="text-muted">
+                                                        <i class="fas fa-map-marker-alt me-1"></i>{{ university.location.name }}
+                                                    </span>
+                                                    {% endif %}
+                                                    
+                                                    {% if university.is_open_for_admission %}
+                                                    <span class="badge bg-success-subtle text-success">
+                                                        <i class="fas fa-check-circle me-1"></i>Qabul ochiq
+                                                    </span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Quick Actions -->
+                                            <div class="dropdown">
+                                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="#"><i class="fas fa-heart me-2"></i>Sevimlilar</a></li>
+                                                    <li><a class="dropdown-item" href="#"><i class="fas fa-share me-2"></i>Ulashish</a></li>
+                                                    <li><a class="dropdown-item" href="#"><i class="fas fa-flag me-2"></i>Xabar berish</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row g-3">
+                                        <!-- Admission Period -->
+                                        <div class="col-md-6">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <i class="far fa-calendar-alt text-primary me-2"></i>
+                                                <span class="text-muted small">Qabul muddati</span>
+                                            </div>
+                                            <div class="fw-medium">
+                                                {% if university.admission_start_date or university.admission_deadline %}
+                                                    {% if university.admission_start_date %}
+                                                        {{ university.admission_start_date|date:"d F Y" }}
+                                                    {% endif %}
+                                                    {% if university.admission_start_date and university.admission_deadline %} - {% endif %}
+                                                    {% if university.admission_deadline %}
+                                                        {{ university.admission_deadline|date:"d F Y" }}
+                                                    {% endif %}
+                                                {% else %}
+                                                    <span class="text-muted">Ma'lumot mavjud emas</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Tuition Fee Range -->
+                                        <div class="col-md-6">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <i class="fas fa-dollar-sign text-primary me-2"></i>
+                                                <span class="text-muted small">Kontrakt to'lovi</span>
+                                            </div>
+                                            <div class="fw-medium">
+                                                {% if university.minimal_tuition_fee %}
+                                                    {{ university.minimal_tuition_fee|intcomma }} UZS
+                                                    {% if university.maximal_tuition_fee %} - {{ university.maximal_tuition_fee|intcomma }} UZS{% endif %}
+                                                {% else %}
+                                                    <span class="text-muted">Ma'lumot mavjud emas</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Features -->
+                                    <div class="d-flex flex-wrap gap-3 my-3">
+                                        {% if university.has_grant %}
+                                        <div class="d-flex align-items-center text-success">
+                                            <i class="fas fa-graduation-cap me-1"></i>
+                                            <span class="small">Grant mavjud</span>
+                                        </div>
+                                        {% endif %}
+                                        
+                                        {% if university.has_accomodation %}
+                                        <div class="d-flex align-items-center text-info">
+                                            <i class="fas fa-bed me-1"></i>
+                                            <span class="small">Yotoqxona</span>
+                                        </div>
+                                        {% endif %}
+                                        
+                                        {% if university.directions.count > 0 %}
+                                        <div class="d-flex align-items-center text-secondary">
+                                            <i class="fas fa-list me-1"></i>
+                                            <span class="small">{{ university.directions.count }} ta yo'nalish</span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <!-- Action Buttons -->
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'universities:university_detail' university.slug %}" class="btn btn-primary">
+                                                <i class="fas fa-info-circle me-1"></i>Batafsil
+                                            </a>
+                                            {% if university.web_site %}
+                                            <a href="{{ university.web_site }}" target="_blank" class="btn btn-outline-primary">
+                                                <i class="fas fa-external-link-alt me-1"></i>Veb-sayt
+                                            </a>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="text-muted small">
+                                            <i class="fas fa-eye me-1"></i>Ko'rildi: 1.2k
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    <!-- Enhanced Pagination -->
+                    {% if is_paginated %}
+                    <nav aria-label="Page navigation" class="mt-5">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="{% pagination_url 1 %}" aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="{% pagination_url page_obj.previous_page_number %}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            
+                            {% for i in paginator.page_range %}
+                                {% if i >= page_obj.number|add:"-2" and i <= page_obj.number|add:"2" %}
+                                <li class="page-item {% if i == page_obj.number %}active{% endif %}">
+                                    <a class="page-link" href="{% pagination_url i %}">{{ i }}</a>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{% pagination_url page_obj.next_page_number %}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="{% pagination_url paginator.num_pages %}" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                        
+                        <div class="text-center mt-3">
+                            <small class="text-muted">
+                                {{ page_obj.start_index }} - {{ page_obj.end_index }} / {{ page_obj.paginator.count }} ta natija
+                            </small>
+                        </div>
+                    </nav>
+                    {% endif %}
+                    
+                {% else %}
+                    <div class="text-center py-5">
+                        <div class="mb-4">
+                            <i class="fas fa-search fa-3x text-muted"></i>
+                        </div>
+                        <h4 class="text-muted">Hech qanday universitet topilmadi</h4>
+                        <p class="text-muted mb-4">Iltimos, boshqa filtr parametrlarini tanlang yoki qidiruvni o'zgartiring</p>
+                        <a href="{% clear_filters_url %}" class="btn btn-primary">
+                            <i class="fas fa-eraser me-2"></i>Filtrlarni tozalash
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.js"></script>
+<script>
+// Enhanced filter management with better UX
+class FilterManager {
+    constructor() {
+        this.form = document.getElementById('filters-form');
+        this.loadingIndicator = document.getElementById('loading-indicator');
+        this.resultsContainer = document.getElementById('results-container');
+        this.initializeSlider();
+        this.initializeEventListeners();
+    }
+    
+    initializeSlider() {
+        const minPriceInput = document.getElementById('min-price-hidden');
+        const maxPriceInput = document.getElementById('max-price-hidden');
+        const minPriceDisplay = document.getElementById('min-price-display');
+        const maxPriceDisplay = document.getElementById('max-price-display');
+        const priceSlider = document.getElementById('price-slider');
+        
+        if (!priceSlider) return;
+        
+        const formatNumber = (num) => new Intl.NumberFormat('uz-UZ').format(num);
+        
+        try {
+            if (priceSlider.noUiSlider) {
+                priceSlider.noUiSlider.destroy();
+            }
+            
+            const minPrice = parseInt(minPriceInput.value) || 0;
+            const maxPrice = parseInt(maxPriceInput.value) || 100000000;
+            
+            minPriceDisplay.textContent = formatNumber(minPrice);
+            maxPriceDisplay.textContent = formatNumber(maxPrice);
+            
+            noUiSlider.create(priceSlider, {
+                start: [minPrice, maxPrice],
+                connect: true,
+                step: 100000,
+                range: {
+                    'min': 0,
+                    'max': 100000000
+                },
+                format: {
+                    to: value => Math.round(value),
+                    from: value => Math.round(value)
+                }
+            });
+            
+            priceSlider.noUiSlider.on('update', (values, handle) => {
+                const value = parseInt(values[handle]);
+                if (handle === 0) {
+                    minPriceInput.value = value;
+                    minPriceDisplay.textContent = formatNumber(value);
+                } else {
+                    maxPriceInput.value = value;
+                    maxPriceDisplay.textContent = formatNumber(value);
+                }
+            });
+            
+            priceSlider.noUiSlider.on('end', () => {
+                this.submitForm();
+            });
+        } catch (error) {
+            console.error("Slider initialization error:", error);
+        }
+    }
+    
+    initializeEventListeners() {
+        // Checkbox filters with debouncing
+        const filterCheckboxes = document.querySelectorAll('.filter-checkbox');
+        filterCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                this.submitForm();
+            });
+        });
+        
+        // Accordion toggle icons
+        const accordionToggles = document.querySelectorAll('[data-bs-toggle="collapse"]');
+        accordionToggles.forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const icon = this.querySelector('i.fa-chevron-up, i.fa-chevron-down');
+                if (icon) {
+                    if (icon.classList.contains('fa-chevron-up')) {
+                        icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+                    } else {
+                        icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+                    }
+                }
+            });
+        });
+        
+        // Search input with debouncing
+        const searchInput = document.getElementById('search');
+        if (searchInput) {
+            let searchTimeout;
+            searchInput.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    this.submitForm();
+                }, 500); // Wait 500ms after user stops typing
+            });
+        }
+    }
+    
+    showLoading() {
+        if (this.loadingIndicator) {
+            this.loadingIndicator.classList.remove('d-none');
+        }
+        if (this.resultsContainer) {
+            this.resultsContainer.classList.add('filter-loading');
+        }
+    }
+    
+    hideLoading() {
+        if (this.loadingIndicator) {
+            this.loadingIndicator.classList.add('d-none');
+        }
+        if (this.resultsContainer) {
+            this.resultsContainer.classList.remove('filter-loading');
+        }
+    }
+    
+    submitForm() {
+        this.showLoading();
+        
+        // Add slight delay for better UX
+        setTimeout(() => {
+            this.form.submit();
+        }, 100);
+    }
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    new FilterManager();
+    
+    // Add smooth scrolling to pagination links
+    document.querySelectorAll('.pagination a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            // Scroll to top of results after pagination
+            setTimeout(() => {
+                document.querySelector('.university-list, .text-center').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 100);
+        });
+    });
+});
+</script>
+{% endblock %} 

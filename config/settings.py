@@ -170,3 +170,7 @@ JAZZMIN_SETTINGS = {
         "web.Degree": "fas fa-graduation-cap",
     },
 }
+
+SILENCED_SYSTEM_CHECKS = [
+    "ckeditor.W001",  # CKEditor 4.22.1 warning
+]

@@ -1,0 +1,36 @@
+<div class="mb-4 pb-3 border-bottom">
+    {% if collapsible %}
+    <div class="d-flex justify-content-between align-items-center mb-3" data-bs-toggle="collapse" href="#{{ collapse_id }}" role="button">
+        <label class="form-label fw-bold mb-0">
+            <i class="{{ icon_class }} me-2"></i>{{ title }}
+        </label>
+        <i class="fas fa-chevron-down"></i>
+    </div>
+    <div class="collapse" id="{{ collapse_id }}">
+    {% else %}
+    <div class="mb-3">
+        <label class="form-label fw-bold">
+            <i class="{{ icon_class }} me-2"></i>{{ title }}
+        </label>
+    </div>
+    <div>
+    {% endif %}
+        <div class="filter-scroll" style="max-height: 200px; overflow-y: auto;">
+            {% for option in options %}
+            <div class="form-check mb-2">
+                <input class="form-check-input" 
+                       type="checkbox" 
+                       name="{{ field_name }}" 
+                       value="{{ option.id }}" 
+                       id="{{ field_name }}{{ option.id }}" 
+                       {% if option.id|stringformat:"i" in selected_values %}checked{% endif %}>
+                <label class="form-check-label" for="{{ field_name }}{{ option.id }}">
+                    {{ option.name }}
+                </label>
+            </div>
+            {% empty %}
+            <div class="text-muted small">Ma'lumot mavjud emas</div>
+            {% endfor %}
+        </div>
+    </div>
+</div> 

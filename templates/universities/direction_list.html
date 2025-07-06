@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load humanize %}
+{% load filter_tags %}
 
 {% block title %}Ta'lim Yo'nalishlari - Ro'yxat{% endblock %}
 
@@ -9,34 +10,49 @@
     <div class="row">
         <!-- Filters Sidebar -->
         <div class="col-lg-3">
-            <div class="mb-4">
-                <h5 class="mb-3">Jami {{ page_obj.paginator.count }} ta natija ko'rsatilmoqda</h5>
-                
+            <div class="mb-4 sticky-filters">
                 <div class="card">
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h5 class="fw-bold m-0">Filter</h5>
-                            <a href="{% url 'universities:direction_list' %}" class="btn btn-outline-danger rounded-pill px-4">Tozalash</a>
+                            <h5 class="fw-bold m-0">Filter
+                                {% active_filters_count as filters_count %}
+                                {% if filters_count > 0 %}
+                                <span class="badge bg-primary ms-2">{{ filters_count }}</span>
+                                {% endif %}
+                            </h5>
+                            {% if filters_count > 0 %}
+                            <a href="{% url 'universities:direction_list' %}" class="btn btn-outline-danger rounded-pill px-3">
+                                <i class="fas fa-eraser me-2"></i>Tozalash
+                            </a>
+                            {% else %}
+                            <span class="btn btn-outline-secondary rounded-pill px-3 disabled">
+                                <i class="fas fa-eraser me-2"></i>Tozalash
+                            </span>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Active Filters Summary -->
+                        {% filter_summary %}
+                        
+                        <!-- Auto-apply toggle -->
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="autoApplyToggle">
+                                <label class="form-check-label small text-muted" for="autoApplyToggle">
+                                    Avtomatik qo'llash
+                                </label>
+                            </div>
                         </div>
                         
                         <form action="{% url 'universities:direction_list' %}" method="get" id="filters-form">
                             <!-- Search Input -->
-                            <div class="mb-4 pb-3 border-bottom">
-                                <label for="search" class="form-label fw-bold mb-2">Qidirish</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" name="search" id="search" 
-                                        placeholder="Yo'nalish nomi..." value="{{ selected_filters.search|default:'' }}">
-                                    <button class="btn btn-outline-primary" type="submit">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
+                            {% search_filter placeholder="Yo'nalish nomi..." value=selected_filters.search field_name="search" %}
                             
                             <!-- University Accordion -->
                             <div class="mb-4 pb-3 border-bottom">
                                 <div class="d-flex justify-content-between align-items-center mb-3" data-bs-toggle="collapse" href="#universityCollapse" role="button">
                                     <label class="form-label fw-bold mb-0">Universitet</label>
-                                    <i class="fas fa-chevron-up"></i>
+                                    <i class="fas fa-chevron-down"></i>
                                 </div>
                                 <div class="collapse" id="universityCollapse">
                                     <div class="filter-scroll" style="max-height: 200px; overflow-y: auto;">
@@ -57,7 +73,7 @@
                             <div class="mb-4 pb-3 border-bottom">
                                 <div class="d-flex justify-content-between align-items-center mb-3" data-bs-toggle="collapse" href="#categoryCollapse" role="button">
                                     <label class="form-label fw-bold mb-0">Ta'lim yo'nalishi</label>
-                                    <i class="fas fa-chevron-up"></i>
+                                    <i class="fas fa-chevron-down"></i>
                                 </div>
                                 <div class="collapse" id="categoryCollapse">
                                     <div class="filter-scroll" style="max-height: 200px; overflow-y: auto;">
@@ -78,7 +94,7 @@
                             <div class="mb-4 pb-3 border-bottom">
                                 <div class="d-flex justify-content-between align-items-center mb-3" data-bs-toggle="collapse" href="#eduTypeCollapse" role="button">
                                     <label class="form-label fw-bold mb-0">Ta'lim turi</label>
-                                    <i class="fas fa-chevron-up"></i>
+                                    <i class="fas fa-chevron-down"></i>
                                 </div>
                                 <div class="collapse" id="eduTypeCollapse">
                                     <div class="filter-scroll" style="max-height: 200px; overflow-y: auto;">
@@ -99,7 +115,7 @@
                             <div class="mb-4 pb-3 border-bottom">
                                 <div class="d-flex justify-content-between align-items-center mb-3" data-bs-toggle="collapse" href="#eduLangCollapse" role="button">
                                     <label class="form-label fw-bold mb-0">Ta'lim tili</label>
-                                    <i class="fas fa-chevron-up"></i>
+                                    <i class="fas fa-chevron-down"></i>
                                 </div>
                                 <div class="collapse" id="eduLangCollapse">
                                     <div class="filter-scroll" style="max-height: 200px; overflow-y: auto;">
@@ -120,7 +136,7 @@
                             <div class="mb-4 pb-3 border-bottom">
                                 <div class="d-flex justify-content-between align-items-center mb-3" data-bs-toggle="collapse" href="#degreeCollapse" role="button">
                                     <label class="form-label fw-bold mb-0">Daraja</label>
-                                    <i class="fas fa-chevron-up"></i>
+                                    <i class="fas fa-chevron-down"></i>
                                 </div>
                                 <div class="collapse" id="degreeCollapse">
                                     <div class="filter-scroll" style="max-height: 200px; overflow-y: auto;">
@@ -138,7 +154,7 @@
                             </div>
                             
                             <!-- Admission Status -->
-                            <div>
+                            <div class="mb-4 pb-3 border-bottom">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="admission_status" value="open" 
                                         id="openAdmission" {% if selected_filters.admission_status == 'open' %}checked{% endif %}>
@@ -148,8 +164,12 @@
                                 </div>
                             </div>
                             
-                            <!-- Apply Filters Button (Hidden, since we'll auto-submit with JS) -->
-                            <button type="submit" id="apply-filters" class="d-none">Apply Filters</button>
+                            <!-- Apply Button -->
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-filter me-2"></i>Qo'llash
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -173,11 +193,11 @@
                       <div class="row align-items-center mb-3">
                         <div class="col-12 col-lg-4 d-flex align-items-center">
                           <div class="bg-white rounded p-2 me-3" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center">
-                            <img src="{{ direction.university.logo.url|default:'#' }}" alt="{{ university.full_name }}" class="img-fluid" />
+                            <img src="{{ direction.university.logo.url|default:'#' }}" alt="{{ direction.university.full_name }}" class="img-fluid" />
                           </div>
                           <div>
                             <h3 class="h6 fw-bold mb-1">{{ direction.direction_name }}</h3>
-                            <p class="mb-0 small">{{ university.full_name }}</p>
+                            <p class="mb-0 small">{{ direction.university.full_name }}</p>
                             {% if direction.application_deadline %}
                             <div class="small text-danger">Qabul tugaydi: {{ direction.application_deadline|date:"d F Y" }}</div>
                             {% endif %}
@@ -325,28 +345,75 @@
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.css">
+<style>
+/* Sticky Filters */
+.sticky-filters {
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+}
+
+.sticky-filters .card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+</style>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Toggle accordion icons
     const accordionToggles = document.querySelectorAll('[data-bs-toggle="collapse"]');
     accordionToggles.forEach(function(toggle) {
-        toggle.addEventListener('click', function() {
-            const icon = this.querySelector('i');
-            if (icon.classList.contains('fa-chevron-up')) {
-                icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
-            } else {
-                icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
-            }
-        });
+        const targetId = toggle.getAttribute('href').substring(1); // Remove #
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+            // Listen for Bootstrap collapse events
+            targetElement.addEventListener('shown.bs.collapse', function() {
+                const icon = toggle.querySelector('i.fa-chevron-up, i.fa-chevron-down');
+                if (icon) {
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                }
+            });
+            
+            targetElement.addEventListener('hidden.bs.collapse', function() {
+                const icon = toggle.querySelector('i.fa-chevron-up, i.fa-chevron-down');
+                if (icon) {
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                }
+            });
+        }
     });
     
-    // Auto-submit form on checkbox changes
-    const filterCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+    // Handle auto-apply toggle
+    const autoApplyToggle = document.getElementById('autoApplyToggle');
+    const filterCheckboxes = document.querySelectorAll('input[type="checkbox"]:not(#autoApplyToggle)');
+    const searchInput = document.querySelector('input[name="search"]');
+    
+    function submitForm() {
+        document.getElementById('filters-form').submit();
+    }
+    
+    function handleFilterChange() {
+        if (autoApplyToggle && autoApplyToggle.checked) {
+            submitForm();
+        }
+    }
+    
+    // Add auto-apply listeners if toggle is enabled
     filterCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            document.getElementById('filters-form').submit();
-        });
+        checkbox.addEventListener('change', handleFilterChange);
     });
+    
+    if (searchInput) {
+        let searchTimeout;
+        searchInput.addEventListener('input', function() {
+            if (autoApplyToggle && autoApplyToggle.checked) {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(submitForm, 500); // 500ms delay for search
+            }
+        });
+    }
 });
 </script>
 {% endblock %}

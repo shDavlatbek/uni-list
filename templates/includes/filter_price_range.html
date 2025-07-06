@@ -1,0 +1,22 @@
+<div class="mb-4 pb-3 border-bottom">
+    <label class="form-label fw-bold mb-3">
+        <i class="fas fa-dollar-sign me-2"></i>Ta'lim narxi
+    </label>
+    <div class="d-flex justify-content-between mb-2">
+        <span class="text-primary fw-bold">
+            <span id="min-price-display">{{ selected_min|floatformat:0 }}</span> UZS
+        </span>
+        <span class="text-primary fw-bold">
+            <span id="max-price-display">{{ selected_max|floatformat:0 }}</span> UZS
+        </span>
+    </div>
+    <div class="range-slider mb-4">
+        <input type="hidden" name="min_price" id="min-price-hidden" value="{{ selected_min }}">
+        <input type="hidden" name="max_price" id="max-price-hidden" value="{{ selected_max }}">
+        <div id="price-slider" class="mb-3" 
+             data-min="{{ min_value }}" 
+             data-max="{{ max_value }}"
+             data-selected-min="{{ selected_min }}"
+             data-selected-max="{{ selected_max }}"></div>
+    </div>
+</div> 

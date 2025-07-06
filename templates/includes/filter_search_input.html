@@ -1,0 +1,17 @@
+<div class="mb-4 pb-3 border-bottom">
+    <label for="{{ field_name }}" class="form-label fw-bold mb-2">
+        <i class="fas fa-search me-2"></i>{{ title|default:"Qidirish" }}
+    </label>
+    <div class="input-group">
+        <input type="text" 
+               class="form-control" 
+               name="{{ field_name }}" 
+               id="{{ field_name }}" 
+               placeholder="{{ placeholder }}" 
+               value="{{ value }}"
+               autocomplete="off">
+        <button class="btn btn-outline-primary" type="submit">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+</div> 

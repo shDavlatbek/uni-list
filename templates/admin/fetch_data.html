@@ -1,0 +1,58 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &rsaquo; {{ title }}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="module filtered">
+    <h2>{{ title }}</h2>
+    <div class="results">
+        <div class="module">
+            <h3>Data Fetching Controls</h3>
+            <div style="padding: 20px;">
+                <p>Click the button below to fetch external data and import it into the system.</p>
+                
+                <form method="post" style="margin-top: 20px;">
+                    {% csrf_token %}
+                    <button type="submit" name="fetch_data" value="1" 
+                            class="default" 
+                            style="background-color: #417690; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">
+                        🔄 Fetch Data
+                    </button>
+                </form>
+                
+                <div style="margin-top: 20px; padding: 15px; background-color: #f9f9f9; border-left: 4px solid #ddd;">
+                    <h4>Instructions:</h4>
+                    <ul>
+                        <li>This will fetch university and program data from external sources</li>
+                        <li>The process may take several minutes to complete</li>
+                        <li>You will see a success message when the operation is complete</li>
+                        <li>Any errors will be displayed in the messages area</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+    .default:hover {
+        background-color: #205067 !important;
+    }
+    
+    .module h3 {
+        margin-top: 0;
+        color: #333;
+    }
+</style>
+{% endblock %} 
